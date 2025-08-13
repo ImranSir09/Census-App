@@ -766,13 +766,110 @@
         .text-yellow-600 {
             color: #d97706;
         }
+        
+        .household-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        
+        .household-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+        }
+        
+        .household-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .household-body {
+            padding: 14px;
+        }
+        
+        .member-item {
+            padding: 10px;
+            border-radius: 8px;
+            background-color: var(--extra-light-gray);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .member-item:hover {
+            background-color: var(--light-gray);
+            transform: translateX(4px);
+        }
+        
+        .member-info {
+            flex: 1;
+        }
+        
+        .member-name {
+            font-weight: 500;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+        
+        .member-details {
+            font-size: 11px;
+            color: var(--gray);
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 16px;
+        }
+        
+        .search-input {
+            padding-left: 40px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--light-gray);
+        }
+        
+        .empty-state h5 {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <div class="container mx-auto px-4 pt-6">
         <div class="header-gradient">
-            <h1 class="text-2xl font-bold mb-1">Population Census App</h1>
+            <h1 class="text-2xl font-bold mb-1">Population Census Register</h1>
             <p class="text-indigo-200 text-sm font-light">BLO Application</p>
         </div>
     </div>
@@ -952,6 +1049,42 @@
             </div>
         </div>
 
+        <!-- Households View -->
+        <div id="households-view" class="view">
+            <div class="card mb-4">
+                <div class="p-4">
+                    <h5 class="section-title">
+                        <i class="bi bi-house-door-fill"></i>
+                        All Households
+                    </h5>
+                    
+                    <!-- Search Box -->
+                    <div class="search-box">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="form-control search-input" id="search-households" placeholder="Search by house number or name...">
+                    </div>
+                    
+                    <!-- Sort Options -->
+                    <div class="d-flex gap-2 mb-3">
+                        <select class="form-control" id="sort-households">
+                            <option value="houseNumber">Sort by House Number</option>
+                            <option value="name">Sort by HOF Name</option>
+                            <option value="members">Sort by Member Count</option>
+                            <option value="date">Sort by Date Added</option>
+                        </select>
+                        <button class="btn btn-primary" id="refresh-households">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Households List -->
+                    <div id="households-list">
+                        <!-- Households will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Reports View -->
         <div id="reports-view" class="view">
             <div class="card mb-6">
@@ -1028,8 +1161,8 @@
                         <i class="bi bi-info-circle-fill"></i>
                         About
                     </h5>
-                    <p class="mb-2 text-gray-700">Population Census Register App v1.5</p>
-                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani (BLO 114-Senzi, 42-Kokernag ST).</p>
+                    <p class="mb-2 text-gray-700">Population Census Register App v2.0</p>
+                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani BLO 114-Senzi (42-Kokernag ST).</p>
                 </div>
             </div>
         </div>
@@ -1045,6 +1178,10 @@
             <a class="nav-tab" href="#" data-view="add-household-view">
                 <i class="bi bi-person-plus-fill"></i>
                 <span>Add</span>
+            </a>
+            <a class="nav-tab" href="#" data-view="households-view">
+                <i class="bi bi-building"></i>
+                <span>Households</span>
             </a>
             <a class="nav-tab" href="#" data-view="reports-view">
                 <i class="bi bi-file-earmark-text-fill"></i>
@@ -1145,6 +1282,19 @@
                     clearAllData();
                 }
             });
+            
+            // Households view functionality
+            document.getElementById('search-households').addEventListener('input', function() {
+                filterHouseholds();
+            });
+            
+            document.getElementById('sort-households').addEventListener('change', function() {
+                sortHouseholds();
+            });
+            
+            document.getElementById('refresh-households').addEventListener('click', function() {
+                displayHouseholds();
+            });
         });
 
         // Initialize app
@@ -1181,6 +1331,8 @@
                 updateAgeChart();
             } else if (viewId === 'reports-view') {
                 updateAgeGroupTable();
+            } else if (viewId === 'households-view') {
+                displayHouseholds();
             }
         }
 
@@ -1507,7 +1659,7 @@
             ageChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['0-16', '17', '18-19', '20-29', '30-39', '40-49', '50-59', '60-69', '70-80', '81-84', '85+'],
+                    labels: ['0-16', '17-17', '18-19', '20-29', '30-39', '40-49', '50-59', '60-69', '70-80', '81-84', '85+'],
                     datasets: [
                         {
                             label: 'Male',
@@ -1588,8 +1740,8 @@
                 '40-49': { male: 0, female: 0 },
                 '50-59': { male: 0, female: 0 },
                 '60-69': { male: 0, female: 0 },
-                '70-79': { male: 0, female: 0 },
-                '80-84': { male: 0, female: 0 },
+                '70-80': { male: 0, female: 0 },
+                '81-84': { male: 0, female: 0 },
                 '85+': { male: 0, female: 0 }
             };
             
@@ -1627,8 +1779,8 @@
                 '40-49': { male: 0, female: 0 },
                 '50-59': { male: 0, female: 0 },
                 '60-69': { male: 0, female: 0 },
-                '70-79': { male: 0, female: 0 },
-                '80-84': { male: 0, female: 0 },
+                '70-80': { male: 0, female: 0 },
+                '81-84': { male: 0, female: 0 },
                 '85+': { male: 0, female: 0 }
             };
             
@@ -1681,6 +1833,262 @@
             tableBody.appendChild(totalRow);
         }
 
+        // Display households
+        function displayHouseholds() {
+            // Get data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Get households list container
+            const householdsList = document.getElementById('households-list');
+            householdsList.innerHTML = '';
+            
+            // Check if there are any households
+            if (data.households.length === 0) {
+                householdsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-house-slash"></i>
+                        <h5>No households added yet</h5>
+                        <p>Start by adding your first household using the + button.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort households by house number (default)
+            const sortedHouseholds = [...data.households].sort((a, b) => {
+                // Try to parse as numbers first, if fails, compare as strings
+                const aNum = parseInt(a.houseNumber);
+                const bNum = parseInt(b.houseNumber);
+                
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    return aNum - bNum;
+                }
+                
+                return a.houseNumber.localeCompare(b.houseNumber);
+            });
+            
+            // Display each household
+            sortedHouseholds.forEach(household => {
+                // Get members for this household
+                const members = data.members.filter(member => member.householdId === household.id);
+                
+                // Create household card
+                const householdCard = document.createElement('div');
+                householdCard.className = 'household-card';
+                householdCard.setAttribute('data-house-number', household.houseNumber.toLowerCase());
+                householdCard.setAttribute('data-hof-name', household.headOfFamily.toLowerCase());
+                householdCard.setAttribute('data-member-count', members.length);
+                householdCard.setAttribute('data-date', household.dateAdded);
+                
+                // Create household header
+                const householdHeader = document.createElement('div');
+                householdHeader.className = 'household-header';
+                householdHeader.innerHTML = `
+                    <div>
+                        <i class="bi bi-house-door-fill me-2"></i>
+                        House #${household.houseNumber}
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-white bg-opacity-20 me-2">${members.length} members</span>
+                        <button class="btn btn-sm btn-outline-danger bg-transparent border-white text-white" onclick="removeHousehold('${household.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                // Create household body
+                const householdBody = document.createElement('div');
+                householdBody.className = 'household-body';
+                
+                // Add HOF info
+                const hof = members.find(member => member.isHead);
+                if (hof) {
+                    const hofAge = hof.dob ? calculateAge(hof.dob) : '';
+                    const hofAgeGroup = hof.dob ? getAgeGroup(hofAge) : '';
+                    const hofGenderIcon = hof.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
+                    
+                    const hofElement = document.createElement('div');
+                    hofElement.className = 'member-item';
+                    hofElement.innerHTML = `
+                        <div class="member-info">
+                            <div class="member-name">
+                                <i class="bi ${hofGenderIcon} me-1"></i>
+                                ${hof.name}
+                                <span class="badge badge-primary ms-2">Head</span>
+                            </div>
+                            <div class="member-details">
+                                ${hof.dob ? `${hofAge} years (${hofAgeGroup})` : 'No DOB'}
+                            </div>
+                        </div>
+                    `;
+                    householdBody.appendChild(hofElement);
+                }
+                
+                // Add other members
+                const otherMembers = members.filter(member => !member.isHead);
+                otherMembers.forEach(member => {
+                    const age = member.dob ? calculateAge(member.dob) : '';
+                    const ageGroup = member.dob ? getAgeGroup(age) : '';
+                    const genderIcon = member.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
+                    
+                    const memberElement = document.createElement('div');
+                    memberElement.className = 'member-item';
+                    memberElement.innerHTML = `
+                        <div class="member-info">
+                            <div class="member-name">
+                                <i class="bi ${genderIcon} me-1"></i>
+                                ${member.name}
+                            </div>
+                            <div class="member-details">
+                                ${member.dob ? `${age} years (${ageGroup})` : 'No DOB'}
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeMemberFromHousehold('${member.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
+                    householdBody.appendChild(memberElement);
+                });
+                
+                // Add address if available
+                if (household.address) {
+                    const addressElement = document.createElement('div');
+                    addressElement.className = 'mt-3 text-sm text-gray-500';
+                    addressElement.innerHTML = `
+                        <i class="bi bi-geo-alt me-1"></i>
+                        ${household.address}
+                    `;
+                    householdBody.appendChild(addressElement);
+                }
+                
+                // Assemble household card
+                householdCard.appendChild(householdHeader);
+                householdCard.appendChild(householdBody);
+                
+                // Add to households list
+                householdsList.appendChild(householdCard);
+            });
+        }
+
+        // Filter households based on search
+        function filterHouseholds() {
+            const searchTerm = document.getElementById('search-households').value.toLowerCase();
+            const householdCards = document.querySelectorAll('.household-card');
+            
+            householdCards.forEach(card => {
+                const houseNumber = card.getAttribute('data-house-number');
+                const hofName = card.getAttribute('data-hof-name');
+                
+                if (houseNumber.includes(searchTerm) || hofName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Sort households
+        function sortHouseholds() {
+            const sortBy = document.getElementById('sort-households').value;
+            const householdsList = document.getElementById('households-list');
+            const householdCards = Array.from(householdsList.querySelectorAll('.household-card'));
+            
+            // Sort the cards
+            householdCards.sort((a, b) => {
+                switch (sortBy) {
+                    case 'houseNumber':
+                        const aHouseNumber = a.getAttribute('data-house-number');
+                        const bHouseNumber = b.getAttribute('data-house-number');
+                        
+                        // Try to parse as numbers first
+                        const aNum = parseInt(aHouseNumber);
+                        const bNum = parseInt(bHouseNumber);
+                        
+                        if (!isNaN(aNum) && !isNaN(bNum)) {
+                            return aNum - bNum;
+                        }
+                        
+                        return aHouseNumber.localeCompare(bHouseNumber);
+                        
+                    case 'name':
+                        const aHofName = a.getAttribute('data-hof-name');
+                        const bHofName = b.getAttribute('data-hof-name');
+                        return aHofName.localeCompare(bHofName);
+                        
+                    case 'members':
+                        const aMemberCount = parseInt(a.getAttribute('data-member-count'));
+                        const bMemberCount = parseInt(b.getAttribute('data-member-count'));
+                        return bMemberCount - aMemberCount; // Descending order
+                        
+                    case 'date':
+                        const aDate = new Date(a.getAttribute('data-date'));
+                        const bDate = new Date(b.getAttribute('data-date'));
+                        return bDate - aDate; // Descending order (newest first)
+                        
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Re-append the sorted cards
+            householdCards.forEach(card => {
+                householdsList.appendChild(card);
+            });
+        }
+
+        // Remove household
+        function removeHousehold(householdId) {
+            if (!confirm('Are you sure you want to remove this entire household? This action cannot be undone.')) {
+                return;
+            }
+            
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Remove the household
+            data.households = data.households.filter(h => h.id !== householdId);
+            
+            // Remove all members of this household
+            data.members = data.members.filter(m => m.householdId !== householdId);
+            
+            // Save data
+            localStorage.setItem('censusData', JSON.stringify(data));
+            
+            // Refresh households list
+            displayHouseholds();
+            
+            // Update dashboard
+            updateDashboard();
+            
+            // Show success toast
+            showToast('Household removed successfully!', 'info');
+        }
+
+        // Remove member from household (in households view)
+        function removeMemberFromHousehold(memberId) {
+            if (!confirm('Are you sure you want to remove this member?')) {
+                return;
+            }
+            
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Remove just this member
+            data.members = data.members.filter(m => m.id !== memberId);
+            
+            // Save data
+            localStorage.setItem('censusData', JSON.stringify(data));
+            
+            // Refresh households list
+            displayHouseholds();
+            
+            // Update dashboard
+            updateDashboard();
+            
+            // Show success toast
+            showToast('Member removed successfully!', 'info');
+        }
+
         // Generate PDF Report
         function generatePDFReport() {
             const { jsPDF } = window.jspdf;
@@ -1705,8 +2113,8 @@
                 '40-49': { male: 0, female: 0 },
                 '50-59': { male: 0, female: 0 },
                 '60-69': { male: 0, female: 0 },
-                '70-79': { male: 0, female: 0 },
-                '80-84': { male: 0, female: 0 },
+                '70-80': { male: 0, female: 0 },
+                '81-84': { male: 0, female: 0 },
                 '85+': { male: 0, female: 0 }
             };
             
@@ -1792,8 +2200,8 @@
             
             // Initialize age groups
             const ageGroups = [
-                '0-16', '17-17', '18-19', '20-29', '30-39', 
-                '40-49', '50-59', '60-69', '70-79', '80-84', '85+'
+                '0-16', '17', '18-19', '20-29', '30-39', 
+                '40-49', '50-59', '60-69', '70-80', '81-84', '85+'
             ];
             
             const ageGroupData = {};
