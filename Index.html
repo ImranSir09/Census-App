@@ -887,6 +887,9 @@
                         <button class="btn btn-success py-3" id="generate-excel-report">
                             <i class="bi bi-file-earmark-spreadsheet me-2"></i>Generate Excel Report
                         </button>
+                        <button class="btn btn-info py-3" id="generate-household-excel">
+                            <i class="bi bi-house-door-fill me-2"></i>Download Household Data
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1035,6 +1038,11 @@
             // Generate Excel Report
             document.getElementById('generate-excel-report').addEventListener('click', function() {
                 generateExcelReport();
+            });
+            
+            // Generate Household Excel Report
+            document.getElementById('generate-household-excel').addEventListener('click', function() {
+                generateHouseholdExcelReport();
             });
             
             // Backup Data
@@ -1828,6 +1836,81 @@
             
             // Show success toast
             showToast('Excel report generated successfully!', 'success');
+        }
+
+        // Generate Household Excel Report
+        function generateHouseholdExcelReport() {
+            // Get data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            
+            // Create header
+            const headerData = [
+                ["Household Data Report"],
+                [`Generated on: ${new Date().toLocaleDateString()}`],
+                []
+            ];
+            
+            // Create table headers
+            const tableHeaders = [
+                "S.No", "House No", "HOF", "Members", "Age", "DOB"
+            ];
+            
+            // Create table data
+            const tableData = [];
+            let serialNumber = 1;
+            
+            // Process each household
+            data.households.forEach(household => {
+                // Get all members of this household
+                const householdMembers = data.members.filter(member => member.householdId === household.id);
+                
+                // Add each member as a row
+                householdMembers.forEach(member => {
+                    const age = member.dob ? calculateAge(member.dob) : '';
+                    const dob = member.dob ? new Date(member.dob).toLocaleDateString() : '';
+                    
+                    tableData.push([
+                        serialNumber++,
+                        household.houseNumber,
+                        household.headOfFamily,
+                        member.name,
+                        age,
+                        dob
+                    ]);
+                });
+                
+                // Add empty row between households for better readability
+                tableData.push([]);
+            });
+            
+            // Combine all data
+            const allData = [...headerData, tableHeaders, ...tableData];
+            
+            // Create worksheet
+            const ws = XLSX.utils.aoa_to_sheet(allData);
+            
+            // Set column widths for better readability
+            ws['!cols'] = [
+                { wch: 8 },   // S.No
+                { wch: 12 },  // House No
+                { wch: 25 },  // HOF
+                { wch: 25 },  // Members
+                { wch: 8 },   // Age
+                { wch: 12 }   // DOB
+            ];
+            
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, "Household Data");
+            
+            // Generate Excel file and download
+            const fileName = `household-data-${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            // Show success toast
+            showToast('Household data downloaded successfully!', 'success');
         }
 
         // Backup data
