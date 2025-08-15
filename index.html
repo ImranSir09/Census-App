@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Population Census Register</title>
+    <title>Population Census</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -863,13 +863,99 @@
             margin-bottom: 8px;
             color: var(--dark);
         }
+        
+        .download-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .download-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .download-modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 320px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .download-modal.active .download-modal-content {
+            transform: scale(1);
+        }
+        
+        .download-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+        
+        .download-modal-body {
+            margin-bottom: 20px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .download-modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        
+        .progress-container {
+            margin-top: 16px;
+            display: none;
+        }
+        
+        .progress-container.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--gray);
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <div class="container mx-auto px-4 pt-6">
         <div class="header-gradient">
-            <h1 class="text-2xl font-bold mb-1">Population Census Register</h1>
+            <h1 class="text-2xl font-bold mb-1">Population Census</h1>
             <p class="text-indigo-200 text-sm font-light">BLO Application</p>
         </div>
     </div>
@@ -1161,8 +1247,8 @@
                         <i class="bi bi-info-circle-fill"></i>
                         About
                     </h5>
-                    <p class="mb-2 text-gray-700">Population Census Register App v2.0</p>
-                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani BLO 114-Senzi (42-Kokernag ST).</p>
+                    <p class="mb-2 text-gray-700">Population Census Register App v2.5</p>
+                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani Mugloo BLO 114 Senzi (42-Kokernag ST) 9596555467.</p>
                 </div>
             </div>
         </div>
@@ -1204,6 +1290,25 @@
 
     <!-- Toast Container -->
     <div class="toast-container"></div>
+
+    <!-- Download Modal -->
+    <div class="download-modal" id="download-modal">
+        <div class="download-modal-content">
+            <h3 class="download-modal-title">Downloading Report</h3>
+            <div class="download-modal-body">
+                Your report is being generated and will be downloaded shortly.
+            </div>
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="progress-text">0%</div>
+            </div>
+            <div class="download-modal-footer">
+                <button class="btn btn-secondary" id="cancel-download">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1294,6 +1399,11 @@
             
             document.getElementById('refresh-households').addEventListener('click', function() {
                 displayHouseholds();
+            });
+            
+            // Download modal functionality
+            document.getElementById('cancel-download').addEventListener('click', function() {
+                closeDownloadModal();
             });
         });
 
@@ -1576,7 +1686,7 @@
         // Get age group based on age
         function getAgeGroup(age) {
             if (age <= 16) return '0-16';
-            if (age === 17) return '17';
+            if (age >= 17 && age <= 17) return '17-17';
             if (age >= 18 && age <= 19) return '18-19';
             if (age >= 20 && age <= 29) return '20-29';
             if (age >= 30 && age <= 39) return '30-39';
@@ -2187,221 +2297,368 @@
             showToast('PDF report generated successfully!', 'success');
         }
 
-        // Generate Excel Report
+        // Generate Excel Report - Android Compatible Version
         function generateExcelReport() {
-            // Get data
-            const data = JSON.parse(localStorage.getItem('censusData'));
-            
-            // Calculate statistics
-            const totalHouseholds = data.households.length;
-            const totalPopulation = data.members.length;
-            const totalMale = data.members.filter(member => member.gender === 'male').length;
-            const totalFemale = data.members.filter(member => member.gender === 'female').length;
-            
-            // Initialize age groups
-            const ageGroups = [
-                '0-16', '17', '18-19', '20-29', '30-39', 
-                '40-49', '50-59', '60-69', '70-79', '80-84', '85+'
-            ];
-            
-            const ageGroupData = {};
-            ageGroups.forEach(group => {
-                ageGroupData[group] = { male: 0, female: 0 };
-            });
-            
-            // Count members by age group and gender
-            data.members.forEach(member => {
-                if (member.dob && member.gender) {
-                    const age = calculateAge(member.dob);
-                    const ageGroup = getAgeGroup(age);
+            try {
+                // Show download modal
+                showDownloadModal();
+                
+                // Simulate progress
+                simulateProgress(100, 2000, function() {
+                    // Get data
+                    const data = JSON.parse(localStorage.getItem('censusData'));
                     
-                    if (ageGroupData[ageGroup]) {
-                        ageGroupData[ageGroup][member.gender]++;
+                    // Calculate statistics
+                    const totalHouseholds = data.households.length;
+                    const totalPopulation = data.members.length;
+                    const totalMale = data.members.filter(member => member.gender === 'male').length;
+                    const totalFemale = data.members.filter(member => member.gender === 'female').length;
+                    
+                    // Initialize age groups
+                    const ageGroups = [
+                        '0-16', '17-17', '18-19', '20-29', '30-39', 
+                        '40-49', '50-59', '60-69', '70-79', '80-84', '85+'
+                    ];
+                    
+                    const ageGroupData = {};
+                    ageGroups.forEach(group => {
+                        ageGroupData[group] = { male: 0, female: 0 };
+                    });
+                    
+                    // Count members by age group and gender
+                    data.members.forEach(member => {
+                        if (member.dob && member.gender) {
+                            const age = calculateAge(member.dob);
+                            const ageGroup = getAgeGroup(age);
+                            
+                            if (ageGroupData[ageGroup]) {
+                                ageGroupData[ageGroup][member.gender]++;
+                            }
+                        }
+                    });
+                    
+                    // Create workbook
+                    const wb = XLSX.utils.book_new();
+                    
+                    // Create summary data
+                    const summaryData = [
+                        ["Population Census Report"],
+                        [`Generated on: ${new Date().toLocaleDateString()}`],
+                        [],
+                        ["Summary"],
+                        ["Total Households", totalHouseholds],
+                        ["Total Population", totalPopulation],
+                        ["Total Male", totalMale],
+                        ["Total Female", totalFemale],
+                        [],
+                        ["Age Group Distribution"]
+                    ];
+                    
+                    // Create age group header row (each age group spans 3 columns)
+                    const headerRow = [""];
+                    ageGroups.forEach(group => {
+                        headerRow.push(group, "", "");
+                    });
+                    
+                    // Create sub-header row (M, F, T under each age group)
+                    const subHeaderRow = [""];
+                    ageGroups.forEach(() => {
+                        subHeaderRow.push("M", "F", "T");
+                    });
+                    
+                    // Create data row (actual counts for each age group)
+                    const dataRow = [""];
+                    ageGroups.forEach(group => {
+                        const male = ageGroupData[group].male;
+                        const female = ageGroupData[group].female;
+                        const total = male + female;
+                        dataRow.push(male, female, total);
+                    });
+                    
+                    // Create total row
+                    const totalRow = ["Total"];
+                    let grandTotalMale = 0;
+                    let grandTotalFemale = 0;
+                    let grandTotal = 0;
+                    
+                    ageGroups.forEach(group => {
+                        const male = ageGroupData[group].male;
+                        const female = ageGroupData[group].female;
+                        const total = male + female;
+                        grandTotalMale += male;
+                        grandTotalFemale += female;
+                        grandTotal += total;
+                    });
+                    
+                    // Add grand totals to the total row
+                    totalRow.push(grandTotalMale, grandTotalFemale, grandTotal);
+                    
+                    // Create age group table data
+                    const ageGroupTableData = [
+                        headerRow,
+                        subHeaderRow,
+                        dataRow,
+                        totalRow
+                    ];
+                    
+                    // Combine all data
+                    const allData = [...summaryData, ...ageGroupTableData];
+                    
+                    // Create worksheet
+                    const ws = XLSX.utils.aoa_to_sheet(allData);
+                    
+                    // Set column widths for better readability
+                    const colWidths = [
+                        { wch: 20 }  // First column
+                    ];
+                    
+                    // Each age group gets 3 columns of width 8
+                    ageGroups.forEach(() => {
+                        colWidths.push({ wch: 8 }, { wch: 8 }, { wch: 8 });
+                    });
+                    
+                    ws['!cols'] = colWidths;
+                    
+                    // Create merges for age group headers
+                    const merges = [];
+                    let startCol = 1; // Column B (0-indexed)
+                    
+                    ageGroups.forEach((group, index) => {
+                        // Each age group spans 3 columns
+                        merges.push({
+                            s: { r: 9, c: startCol },      // Start at row 10, column startCol
+                            e: { r: 9, c: startCol + 2 }    // End at row 10, column startCol+2
+                        });
+                        startCol += 3;
+                    });
+                    
+                    ws['!merges'] = merges;
+                    
+                    // Add worksheet to workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Census Report");
+                    
+                    // Generate Excel file
+                    const fileName = `census-report-${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`;
+                    
+                    // Convert workbook to binary data
+                    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+                    
+                    // Convert to Blob
+                    const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+                    
+                    // For Android WebView compatibility
+                    if (window.cordova || window.Capacitor) {
+                        // If running in Cordova/Capacitor environment
+                        saveFileForAndroid(blob, fileName);
+                    } else {
+                        // Standard browser download
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = fileName;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
                     }
-                }
-            });
-            
-            // Create workbook
-            const wb = XLSX.utils.book_new();
-            
-            // Create summary data
-            const summaryData = [
-                ["Population Census Report"],
-                [`Generated on: ${new Date().toLocaleDateString()}`],
-                [],
-                ["Summary"],
-                ["Total Households", totalHouseholds],
-                ["Total Population", totalPopulation],
-                ["Total Male", totalMale],
-                ["Total Female", totalFemale],
-                [],
-                ["Age Group Distribution"]
-            ];
-            
-            // Create age group header row (each age group spans 3 columns)
-            const headerRow = [""];
-            ageGroups.forEach(group => {
-                headerRow.push(group, "", "");
-            });
-            
-            // Create sub-header row (M, F, T under each age group)
-            const subHeaderRow = [""];
-            ageGroups.forEach(() => {
-                subHeaderRow.push("M", "F", "T");
-            });
-            
-            // Create data row (actual counts for each age group)
-            const dataRow = [""];
-            ageGroups.forEach(group => {
-                const male = ageGroupData[group].male;
-                const female = ageGroupData[group].female;
-                const total = male + female;
-                dataRow.push(male, female, total);
-            });
-            
-            // Create total row
-            const totalRow = ["Total"];
-            let grandTotalMale = 0;
-            let grandTotalFemale = 0;
-            let grandTotal = 0;
-            
-            ageGroups.forEach(group => {
-                const male = ageGroupData[group].male;
-                const female = ageGroupData[group].female;
-                const total = male + female;
-                grandTotalMale += male;
-                grandTotalFemale += female;
-                grandTotal += total;
-            });
-            
-            // Add grand totals to the total row
-            totalRow.push(grandTotalMale, grandTotalFemale, grandTotal);
-            
-            // Create age group table data
-            const ageGroupTableData = [
-                headerRow,
-                subHeaderRow,
-                dataRow,
-                totalRow
-            ];
-            
-            // Combine all data
-            const allData = [...summaryData, ...ageGroupTableData];
-            
-            // Create worksheet
-            const ws = XLSX.utils.aoa_to_sheet(allData);
-            
-            // Set column widths for better readability
-            const colWidths = [
-                { wch: 20 }  // First column
-            ];
-            
-            // Each age group gets 3 columns of width 8
-            ageGroups.forEach(() => {
-                colWidths.push({ wch: 8 }, { wch: 8 }, { wch: 8 });
-            });
-            
-            ws['!cols'] = colWidths;
-            
-            // Create merges for age group headers
-            const merges = [];
-            let startCol = 1; // Column B (0-indexed)
-            
-            ageGroups.forEach((group, index) => {
-                // Each age group spans 3 columns
-                merges.push({
-                    s: { r: 9, c: startCol },      // Start at row 10, column startCol
-                    e: { r: 9, c: startCol + 2 }    // End at row 10, column startCol+2
+                    
+                    // Close modal and show success
+                    closeDownloadModal();
+                    showToast('Excel report generated successfully!', 'success');
                 });
-                startCol += 3;
-            });
-            
-            ws['!merges'] = merges;
-            
-            // Add worksheet to workbook
-            XLSX.utils.book_append_sheet(wb, ws, "Census Report");
-            
-            // Generate Excel file and download
-            const fileName = `census-report-${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-            
-            // Show success toast
-            showToast('Excel report generated successfully!', 'success');
+            } catch (error) {
+                closeDownloadModal();
+                showToast('Error generating Excel report: ' + error.message, 'error');
+            }
         }
 
-        // Generate Household Excel Report
+        // Generate Household Excel Report - Android Compatible Version
         function generateHouseholdExcelReport() {
-            // Get data
-            const data = JSON.parse(localStorage.getItem('censusData'));
-            
-            // Create workbook
-            const wb = XLSX.utils.book_new();
-            
-            // Create header
-            const headerData = [
-                ["Household Data Report"],
-                [`Generated on: ${new Date().toLocaleDateString()}`],
-                []
-            ];
-            
-            // Create table headers
-            const tableHeaders = [
-                "S.No", "House No", "HOF", "Members", "Age", "DOB"
-            ];
-            
-            // Create table data
-            const tableData = [];
-            let serialNumber = 1;
-            
-            // Process each household
-            data.households.forEach(household => {
-                // Get all members of this household
-                const householdMembers = data.members.filter(member => member.householdId === household.id);
+            try {
+                // Show download modal
+                showDownloadModal();
                 
-                // Add each member as a row
-                householdMembers.forEach(member => {
-                    const age = member.dob ? calculateAge(member.dob) : '';
-                    const dob = member.dob ? new Date(member.dob).toLocaleDateString() : '';
+                // Simulate progress
+                simulateProgress(100, 2000, function() {
+                    // Get data
+                    const data = JSON.parse(localStorage.getItem('censusData'));
                     
-                    tableData.push([
-                        serialNumber++,
-                        household.houseNumber,
-                        household.headOfFamily,
-                        member.name,
-                        age,
-                        dob
-                    ]);
+                    // Create workbook
+                    const wb = XLSX.utils.book_new();
+                    
+                    // Create header
+                    const headerData = [
+                        ["Household Data Report"],
+                        [`Generated on: ${new Date().toLocaleDateString()}`],
+                        []
+                    ];
+                    
+                    // Create table headers
+                    const tableHeaders = [
+                        "S.No", "House No", "HOF", "Members", "Age", "DOB"
+                    ];
+                    
+                    // Create table data
+                    const tableData = [];
+                    let serialNumber = 1;
+                    
+                    // Process each household
+                    data.households.forEach(household => {
+                        // Get all members of this household
+                        const householdMembers = data.members.filter(member => member.householdId === household.id);
+                        
+                        // Add each member as a row
+                        householdMembers.forEach(member => {
+                            const age = member.dob ? calculateAge(member.dob) : '';
+                            const dob = member.dob ? new Date(member.dob).toLocaleDateString() : '';
+                            
+                            tableData.push([
+                                serialNumber++,
+                                household.houseNumber,
+                                household.headOfFamily,
+                                member.name,
+                                age,
+                                dob
+                            ]);
+                        });
+                        
+                        // Add empty row between households for better readability
+                        tableData.push([]);
+                    });
+                    
+                    // Combine all data
+                    const allData = [...headerData, tableHeaders, ...tableData];
+                    
+                    // Create worksheet
+                    const ws = XLSX.utils.aoa_to_sheet(allData);
+                    
+                    // Set column widths for better readability
+                    ws['!cols'] = [
+                        { wch: 8 },   // S.No
+                        { wch: 12 },  // House No
+                        { wch: 25 },  // HOF
+                        { wch: 25 },  // Members
+                        { wch: 8 },   // Age
+                        { wch: 12 }   // DOB
+                    ];
+                    
+                    // Add worksheet to workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Household Data");
+                    
+                    // Generate Excel file
+                    const fileName = `household-data-${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`;
+                    
+                    // Convert workbook to binary data
+                    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+                    
+                    // Convert to Blob
+                    const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+                    
+                    // For Android WebView compatibility
+                    if (window.cordova || window.Capacitor) {
+                        // If running in Cordova/Capacitor environment
+                        saveFileForAndroid(blob, fileName);
+                    } else {
+                        // Standard browser download
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = fileName;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    }
+                    
+                    // Close modal and show success
+                    closeDownloadModal();
+                    showToast('Household data downloaded successfully!', 'success');
                 });
+            } catch (error) {
+                closeDownloadModal();
+                showToast('Error generating Excel report: ' + error.message, 'error');
+            }
+        }
+
+        // Helper function to convert string to ArrayBuffer
+        function s2ab(s) {
+            const buf = new ArrayBuffer(s.length);
+            const view = new Uint8Array(buf);
+            for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+
+        // Helper function to save file in Android environment
+        function saveFileForAndroid(blob, fileName) {
+            // This function would need to be implemented with Cordova File plugin
+            // For now, we'll use a fallback method that works in most WebView environments
+            
+            // Create a data URL from the blob
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64data = reader.result;
                 
-                // Add empty row between households for better readability
-                tableData.push([]);
-            });
+                // Try to use the Android Intent to open the file
+                if (window.android && window.android.saveFile) {
+                    // If there's a JavaScript interface for Android
+                    window.android.saveFile(base64data, fileName);
+                } else {
+                    // Fallback: create a download link
+                    const a = document.createElement('a');
+                    a.href = base64data;
+                    a.download = fileName;
+                    a.target = '_blank';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+            };
+            reader.readAsDataURL(blob);
+        }
+
+        // Show download modal
+        function showDownloadModal() {
+            const modal = document.getElementById('download-modal');
+            modal.classList.add('active');
             
-            // Combine all data
-            const allData = [...headerData, tableHeaders, ...tableData];
+            // Reset progress
+            document.getElementById('progress-fill').style.width = '0%';
+            document.getElementById('progress-text').textContent = '0%';
+            document.getElementById('progress-container').classList.remove('active');
+        }
+
+        // Close download modal
+        function closeDownloadModal() {
+            const modal = document.getElementById('download-modal');
+            modal.classList.remove('active');
+        }
+
+        // Simulate progress
+        function simulateProgress(maxPercent, duration, callback) {
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const progressContainer = document.getElementById('progress-container');
             
-            // Create worksheet
-            const ws = XLSX.utils.aoa_to_sheet(allData);
+            progressContainer.classList.add('active');
             
-            // Set column widths for better readability
-            ws['!cols'] = [
-                { wch: 8 },   // S.No
-                { wch: 12 },  // House No
-                { wch: 25 },  // HOF
-                { wch: 25 },  // Members
-                { wch: 8 },   // Age
-                { wch: 12 }   // DOB
-            ];
+            let currentPercent = 0;
+            const increment = maxPercent / (duration / 50);
             
-            // Add worksheet to workbook
-            XLSX.utils.book_append_sheet(wb, ws, "Household Data");
-            
-            // Generate Excel file and download
-            const fileName = `household-data-${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-            
-            // Show success toast
-            showToast('Household data downloaded successfully!', 'success');
+            const interval = setInterval(() => {
+                currentPercent += increment;
+                
+                if (currentPercent >= maxPercent) {
+                    currentPercent = maxPercent;
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        if (callback) callback();
+                    }, 300);
+                }
+                
+                progressFill.style.width = currentPercent + '%';
+                progressText.textContent = Math.round(currentPercent) + '%';
+            }, 50);
         }
 
         // Backup data
