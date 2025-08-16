@@ -949,6 +949,21 @@
             font-size: 12px;
             color: var(--gray);
         }
+        
+        .median-tip {
+            background-color: #f0f9ff;
+            border-left: 4px solid var(--info);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .median-tip i {
+            color: var(--info);
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -1190,6 +1205,11 @@
                             <i class="bi bi-house-door-fill me-2"></i>Download Household Data
                         </button>
                     </div>
+                    
+                    <div class="median-tip">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <strong>Tip:</strong> Excel downloads work perfectly in Median.co APK. Files will be saved to your device's Downloads folder.
+                    </div>
                 </div>
             </div>
 
@@ -1247,8 +1267,8 @@
                         <i class="bi bi-info-circle-fill"></i>
                         About
                     </h5>
-                    <p class="mb-2 text-gray-700">Population Census Register App v2.5</p>
-                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani Mugloo BLO 114 Senzi (42-Kokernag ST) 9596555467.</p>
+                    <p class="mb-2 text-gray-700">Population Census Register App v1.0</p>
+                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani (BLO 114 Senzi 42-Kokernag ST. Contact 9149690096.</p>
                 </div>
             </div>
         </div>
@@ -1294,9 +1314,9 @@
     <!-- Download Modal -->
     <div class="download-modal" id="download-modal">
         <div class="download-modal-content">
-            <h3 class="download-modal-title">Downloading Report</h3>
+            <h3 class="download-modal-title">Generating Report</h3>
             <div class="download-modal-body">
-                Your report is being generated and will be downloaded shortly.
+                Your Excel report is being generated and will be downloaded shortly.
             </div>
             <div class="progress-container" id="progress-container">
                 <div class="progress-bar">
@@ -1686,15 +1706,15 @@
         // Get age group based on age
         function getAgeGroup(age) {
             if (age <= 16) return '0-16';
-            if (age >= 17 && age <= 17) return '17-17';
+            if (age === 17) return '17';
             if (age >= 18 && age <= 19) return '18-19';
             if (age >= 20 && age <= 29) return '20-29';
             if (age >= 30 && age <= 39) return '30-39';
             if (age >= 40 && age <= 49) return '40-49';
             if (age >= 50 && age <= 59) return '50-59';
             if (age >= 60 && age <= 69) return '60-69';
-            if (age >= 70 && age <= 79) return '70-79';
-            if (age >= 80 && age <= 84) return '80-84';
+            if (age >= 70 && age <= 80) return '70-80';
+            if (age >= 81 && age <= 84) return '81-84';
             return '85+';
         }
 
@@ -2297,14 +2317,14 @@
             showToast('PDF report generated successfully!', 'success');
         }
 
-        // Generate Excel Report - Android Compatible Version
+        // Generate Excel Report - Median.co Compatible
         function generateExcelReport() {
             try {
                 // Show download modal
                 showDownloadModal();
                 
                 // Simulate progress
-                simulateProgress(100, 2000, function() {
+                simulateProgress(100, 1500, function() {
                     // Get data
                     const data = JSON.parse(localStorage.getItem('censusData'));
                     
@@ -2440,27 +2460,8 @@
                     // Generate Excel file
                     const fileName = `census-report-${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`;
                     
-                    // Convert workbook to binary data
-                    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-                    
-                    // Convert to Blob
-                    const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
-                    
-                    // For Android WebView compatibility
-                    if (window.cordova || window.Capacitor) {
-                        // If running in Cordova/Capacitor environment
-                        saveFileForAndroid(blob, fileName);
-                    } else {
-                        // Standard browser download
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = fileName;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }
+                    // For Median.co APK compatibility
+                    downloadExcelForMedian(wb, fileName);
                     
                     // Close modal and show success
                     closeDownloadModal();
@@ -2472,14 +2473,14 @@
             }
         }
 
-        // Generate Household Excel Report - Android Compatible Version
+        // Generate Household Excel Report - Median.co Compatible
         function generateHouseholdExcelReport() {
             try {
                 // Show download modal
                 showDownloadModal();
                 
                 // Simulate progress
-                simulateProgress(100, 2000, function() {
+                simulateProgress(100, 1500, function() {
                     // Get data
                     const data = JSON.parse(localStorage.getItem('censusData'));
                     
@@ -2548,27 +2549,8 @@
                     // Generate Excel file
                     const fileName = `household-data-${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`;
                     
-                    // Convert workbook to binary data
-                    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-                    
-                    // Convert to Blob
-                    const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
-                    
-                    // For Android WebView compatibility
-                    if (window.cordova || window.Capacitor) {
-                        // If running in Cordova/Capacitor environment
-                        saveFileForAndroid(blob, fileName);
-                    } else {
-                        // Standard browser download
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = fileName;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }
+                    // For Median.co APK compatibility
+                    downloadExcelForMedian(wb, fileName);
                     
                     // Close modal and show success
                     closeDownloadModal();
@@ -2580,40 +2562,56 @@
             }
         }
 
+        // Download Excel for Median.co APK
+        function downloadExcelForMedian(workbook, fileName) {
+            try {
+                // Convert workbook to binary data
+                const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
+                
+                // Convert to Blob
+                const blob = new Blob([s2ab(wbout)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                
+                // Create download link
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                
+                // For Median.co, we need to handle the download differently
+                if (window.Median) {
+                    // If we're in Median.co environment
+                    try {
+                        // Try to use Median's download method if available
+                        window.Median.downloadFile(url, fileName);
+                    } catch (e) {
+                        // Fallback to standard method
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    }
+                } else {
+                    // Standard browser download
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+                
+                // Clean up
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                }, 100);
+            } catch (error) {
+                console.error('Error downloading Excel file:', error);
+                showToast('Error downloading file: ' + error.message, 'error');
+            }
+        }
+
         // Helper function to convert string to ArrayBuffer
         function s2ab(s) {
             const buf = new ArrayBuffer(s.length);
             const view = new Uint8Array(buf);
             for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
             return buf;
-        }
-
-        // Helper function to save file in Android environment
-        function saveFileForAndroid(blob, fileName) {
-            // This function would need to be implemented with Cordova File plugin
-            // For now, we'll use a fallback method that works in most WebView environments
-            
-            // Create a data URL from the blob
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                const base64data = reader.result;
-                
-                // Try to use the Android Intent to open the file
-                if (window.android && window.android.saveFile) {
-                    // If there's a JavaScript interface for Android
-                    window.android.saveFile(base64data, fileName);
-                } else {
-                    // Fallback: create a download link
-                    const a = document.createElement('a');
-                    a.href = base64data;
-                    a.download = fileName;
-                    a.target = '_blank';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }
-            };
-            reader.readAsDataURL(blob);
         }
 
         // Show download modal
