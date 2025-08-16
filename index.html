@@ -142,6 +142,12 @@
             box-shadow: 0 4px 6px -1px rgba(6, 182, 212, 0.2), 0 2px 4px -1px rgba(6, 182, 212, 0.1);
         }
         
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2), 0 2px 4px -1px rgba(245, 158, 11, 0.1);
+        }
+        
         .form-control, .form-select {
             border-radius: 12px;
             border: 1px solid var(--border);
@@ -167,12 +173,28 @@
             background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
         }
         
+        .form-control.is-valid {
+            border-color: var(--success);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2310b981' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M3.5 6l2 2 3-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
         .invalid-feedback {
             display: block;
             width: 100%;
             margin-top: 0.25rem;
             font-size: 0.875em;
             color: var(--danger);
+        }
+        
+        .valid-feedback {
+            display: block;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            color: var(--success);
         }
         
         .form-label {
@@ -695,6 +717,17 @@
             color: white;
         }
         
+        .btn-outline-primary {
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            background-color: transparent;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
         .form-check-inline {
             display: inline-flex;
             align-items: center;
@@ -1000,14 +1033,122 @@
         .duplicate-warning.hidden {
             display: none;
         }
+        
+        .input-group {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            width: 100%;
+        }
+        
+        .input-group-text {
+            display: flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: center;
+            white-space: nowrap;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem 0 0 0.375rem;
+        }
+        
+        .input-group .form-control {
+            position: relative;
+            flex: 1 1 auto;
+            width: 1%;
+            min-width: 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        
+        .input-group .form-control:focus {
+            z-index: 3;
+        }
+        
+        .edit-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 16px;
+        }
+        
+        .edit-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .edit-modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .edit-modal.active .edit-modal-content {
+            transform: scale(1);
+        }
+        
+        .edit-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+        
+        .edit-modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .edit-modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        
+        .member-contact-info {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+        
+        .member-contact-info i {
+            margin-right: 4px;
+            font-size: 12px;
+        }
+        
+        .member-contact-info span {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <div class="container mx-auto px-4 pt-6">
         <div class="header-gradient">
-            <h1 class="text-2xl font-bold mb-1">Population Census</h1>
-            <p class="text-indigo-200 text-sm font-light">A BLO's Vision, For All BLOs</p>
+            <h1 class="text-2xl font-bold mb-1">Population Census Register</h1>
+            <p class="text-indigo-200 text-sm font-light">By Imran Gani Mugloo</p>
         </div>
     </div>
 
@@ -1127,6 +1268,32 @@
                             </div>
                         </div>
                         <div class="mb-3">
+                            <label for="hof-aadhar" class="form-label">Aadhar Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                                <input type="text" class="form-control" id="hof-aadhar" placeholder="Enter 12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}">
+                            </div>
+                            <div class="invalid-feedback" id="hof-aadhar-feedback">
+                                Please enter a valid 12-digit Aadhar number.
+                            </div>
+                            <div class="valid-feedback" id="hof-aadhar-valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hof-phone" class="form-label">Phone Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                <input type="text" class="form-control" id="hof-phone" placeholder="Enter 10-digit phone number" maxlength="10" pattern="[0-9]{10}">
+                            </div>
+                            <div class="invalid-feedback" id="hof-phone-feedback">
+                                Please enter a valid 10-digit phone number.
+                            </div>
+                            <div class="valid-feedback" id="hof-phone-valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="mb-3">
                             <label for="house-number" class="form-label">House Number</label>
                             <input type="text" class="form-control" id="house-number" placeholder="Enter house number" required>
                             <div class="duplicate-warning hidden" id="house-number-warning">
@@ -1171,6 +1338,32 @@
                                     <input class="form-check-input" type="radio" name="member-gender" id="gender-female" value="female" required>
                                     <label class="form-check-label" for="gender-female">Female</label>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="member-aadhar" class="form-label">Aadhar Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                                <input type="text" class="form-control" id="member-aadhar" placeholder="Enter 12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}">
+                            </div>
+                            <div class="invalid-feedback" id="member-aadhar-feedback">
+                                Please enter a valid 12-digit Aadhar number.
+                            </div>
+                            <div class="valid-feedback" id="member-aadhar-valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="member-phone" class="form-label">Phone Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                <input type="text" class="form-control" id="member-phone" placeholder="Enter 10-digit phone number" maxlength="10" pattern="[0-9]{10}">
+                            </div>
+                            <div class="invalid-feedback" id="member-phone-feedback">
+                                Please enter a valid 10-digit phone number.
+                            </div>
+                            <div class="valid-feedback" id="member-phone-valid-feedback">
+                                Looks good!
                             </div>
                         </div>
                         <div class="d-grid gap-2">
@@ -1248,7 +1441,7 @@
                     
                     <div class="median-tip">
                         <i class="bi bi-info-circle-fill"></i>
-                        <strong>Tip:</strong> Excel downloads works perfectly. Files will be saved to your device's Downloads folder.
+                        <strong>Tip:</strong> Excel downloads work perfectly. Files will be saved to your device's Downloads folder.
                     </div>
                 </div>
             </div>
@@ -1307,8 +1500,8 @@
                         <i class="bi bi-info-circle-fill"></i>
                         About
                     </h5>
-                    <p class="mb-2 text-gray-700">Population Census 2.5.1</p>
-                    <p class="mb-0 text-gray-500 font-light">Imran Gani Mugloo (BLO 114 SENZI 42-KOLERNAG ST), Contact 9149690096.</p>
+                    <p class="mb-2 text-gray-700">Population Census App v2.5.1</p>
+                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani Mugloo (BLO 114-Senzi, 42 Kokernag ST  9149690096).</p>
                 </div>
             </div>
         </div>
@@ -1370,6 +1563,81 @@
         </div>
     </div>
 
+    <!-- Edit Household Modal -->
+    <div class="edit-modal" id="edit-modal">
+        <div class="edit-modal-content">
+            <h3 class="edit-modal-title">Edit Household</h3>
+            <div class="edit-modal-body">
+                <form id="edit-household-form">
+                    <input type="hidden" id="edit-household-id">
+                    <div class="mb-3">
+                        <label for="edit-hof-name" class="form-label">Head of Family Name</label>
+                        <input type="text" class="form-control" id="edit-hof-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-hof-dob" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="edit-hof-dob" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Gender</label>
+                        <div class="mt-1">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-hof-gender" id="edit-hof-gender-male" value="male" required>
+                                <label class="form-check-label" for="edit-hof-gender-male">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-hof-gender" id="edit-hof-gender-female" value="female" required>
+                                <label class="form-check-label" for="edit-hof-gender-female">Female</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-hof-aadhar" class="form-label">Aadhar Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                            <input type="text" class="form-control" id="edit-hof-aadhar" placeholder="Enter 12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}">
+                        </div>
+                        <div class="invalid-feedback" id="edit-hof-aadhar-feedback">
+                            Please enter a valid 12-digit Aadhar number.
+                        </div>
+                        <div class="valid-feedback" id="edit-hof-aadhar-valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-hof-phone" class="form-label">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input type="text" class="form-control" id="edit-hof-phone" placeholder="Enter 10-digit phone number" maxlength="10" pattern="[0-9]{10}">
+                        </div>
+                        <div class="invalid-feedback" id="edit-hof-phone-feedback">
+                            Please enter a valid 10-digit phone number.
+                        </div>
+                        <div class="valid-feedback" id="edit-hof-phone-valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-house-number" class="form-label">House Number</label>
+                        <input type="text" class="form-control" id="edit-house-number" required>
+                        <div class="duplicate-warning hidden" id="edit-house-number-warning">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span>This house number already exists. Please enter a unique house number.</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-address" class="form-label">Address</label>
+                        <textarea class="form-control" id="edit-address" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="edit-modal-footer">
+                <button class="btn btn-secondary" id="cancel-edit">Cancel</button>
+                <button class="btn btn-primary" id="save-edit">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize app
@@ -1404,6 +1672,41 @@
             // House number validation
             document.getElementById('house-number').addEventListener('input', function() {
                 validateHouseNumber(this.value);
+            });
+            
+            // Aadhar validation
+            document.getElementById('hof-aadhar').addEventListener('input', function() {
+                validateAadhar(this, 'hof-aadhar-feedback', 'hof-aadhar-valid-feedback');
+            });
+            
+            // Phone validation
+            document.getElementById('hof-phone').addEventListener('input', function() {
+                validatePhone(this, 'hof-phone-feedback', 'hof-phone-valid-feedback');
+            });
+            
+            // Member Aadhar validation
+            document.getElementById('member-aadhar').addEventListener('input', function() {
+                validateAadhar(this, 'member-aadhar-feedback', 'member-aadhar-valid-feedback');
+            });
+            
+            // Member Phone validation
+            document.getElementById('member-phone').addEventListener('input', function() {
+                validatePhone(this, 'member-phone-feedback', 'member-phone-valid-feedback');
+            });
+            
+            // Edit HOF Aadhar validation
+            document.getElementById('edit-hof-aadhar').addEventListener('input', function() {
+                validateAadhar(this, 'edit-hof-aadhar-feedback', 'edit-hof-aadhar-valid-feedback');
+            });
+            
+            // Edit HOF Phone validation
+            document.getElementById('edit-hof-phone').addEventListener('input', function() {
+                validatePhone(this, 'edit-hof-phone-feedback', 'edit-hof-phone-valid-feedback');
+            });
+            
+            // Edit house number validation
+            document.getElementById('edit-house-number').addEventListener('input', function() {
+                validateEditHouseNumber(this.value);
             });
             
             // Member Form submission
@@ -1466,6 +1769,15 @@
                 displayHouseholds();
             });
             
+            // Edit modal functionality
+            document.getElementById('cancel-edit').addEventListener('click', function() {
+                closeEditModal();
+            });
+            
+            document.getElementById('save-edit').addEventListener('click', function() {
+                saveHouseholdEdit();
+            });
+            
             // Download modal functionality
             document.getElementById('cancel-download').addEventListener('click', function() {
                 closeDownloadModal();
@@ -1520,6 +1832,50 @@
             }
         }
 
+        // Validate Aadhar number
+        function validateAadhar(input, errorId, validId) {
+            const value = input.value.trim();
+            const aadharRegex = /^[0-9]{12}$/;
+            
+            if (value === '') {
+                // Empty is valid (optional field)
+                input.classList.remove('is-invalid', 'is-valid');
+                return true;
+            }
+            
+            if (aadharRegex.test(value)) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+                return true;
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+                return false;
+            }
+        }
+
+        // Validate phone number
+        function validatePhone(input, errorId, validId) {
+            const value = input.value.trim();
+            const phoneRegex = /^[0-9]{10}$/;
+            
+            if (value === '') {
+                // Empty is valid (optional field)
+                input.classList.remove('is-invalid', 'is-valid');
+                return true;
+            }
+            
+            if (phoneRegex.test(value)) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+                return true;
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+                return false;
+            }
+        }
+
         // Validate house number for duplicates
         function validateHouseNumber(houseNumber) {
             if (!houseNumber) {
@@ -1545,13 +1901,53 @@
             }
         }
 
+        // Validate edit house number for duplicates
+        function validateEditHouseNumber(houseNumber) {
+            if (!houseNumber) {
+                document.getElementById('edit-house-number').classList.remove('is-invalid');
+                document.getElementById('edit-house-number-warning').classList.add('hidden');
+                return true;
+            }
+            
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            const householdId = document.getElementById('edit-household-id').value;
+            
+            // Check if house number already exists (excluding current household)
+            const existingHousehold = data.households.find(h => 
+                h.houseNumber.toLowerCase() === houseNumber.toLowerCase() && 
+                h.id !== householdId
+            );
+            
+            if (existingHousehold) {
+                document.getElementById('edit-house-number').classList.add('is-invalid');
+                document.getElementById('edit-house-number-warning').classList.remove('hidden');
+                return false;
+            } else {
+                document.getElementById('edit-house-number').classList.remove('is-invalid');
+                document.getElementById('edit-house-number-warning').classList.add('hidden');
+                return true;
+            }
+        }
+
         // Add Head of Family
         function addHeadOfFamily() {
             const name = document.getElementById('hof-name').value;
             const dob = document.getElementById('hof-dob').value;
             const gender = document.querySelector('input[name="hof-gender"]:checked').value;
+            const aadhar = document.getElementById('hof-aadhar').value.trim();
+            const phone = document.getElementById('hof-phone').value.trim();
             const houseNumber = document.getElementById('house-number').value;
             const address = document.getElementById('address').value;
+            
+            // Validate Aadhar and phone if provided
+            const aadharValid = validateAadhar(document.getElementById('hof-aadhar'), 'hof-aadhar-feedback', 'hof-aadhar-valid-feedback');
+            const phoneValid = validatePhone(document.getElementById('hof-phone'), 'hof-phone-feedback', 'hof-phone-valid-feedback');
+            
+            if (!aadharValid || !phoneValid) {
+                showToast('Please fix validation errors before submitting.', 'error');
+                return;
+            }
             
             // Validate house number
             if (!validateHouseNumber(houseNumber)) {
@@ -1581,6 +1977,8 @@
                 name: name,
                 dob: dob,
                 gender: gender,
+                aadhar: aadhar,
+                phone: phone,
                 isHead: true,
                 dateAdded: new Date().toISOString()
             };
@@ -1593,6 +1991,11 @@
             
             // Reset form
             document.getElementById('hof-form').reset();
+            
+            // Clear validation states
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
             
             // Show add members section
             document.getElementById('add-members-section').classList.remove('d-none');
@@ -1611,6 +2014,17 @@
             const name = document.getElementById('member-name').value;
             const dob = document.getElementById('member-dob').value;
             const gender = document.querySelector('input[name="member-gender"]:checked').value;
+            const aadhar = document.getElementById('member-aadhar').value.trim();
+            const phone = document.getElementById('member-phone').value.trim();
+            
+            // Validate Aadhar and phone if provided
+            const aadharValid = validateAadhar(document.getElementById('member-aadhar'), 'member-aadhar-feedback', 'member-aadhar-valid-feedback');
+            const phoneValid = validatePhone(document.getElementById('member-phone'), 'member-phone-feedback', 'member-phone-valid-feedback');
+            
+            if (!aadharValid || !phoneValid) {
+                showToast('Please fix validation errors before submitting.', 'error');
+                return;
+            }
             
             // Get existing data
             const data = JSON.parse(localStorage.getItem('censusData'));
@@ -1622,6 +2036,8 @@
                 name: name,
                 dob: dob,
                 gender: gender,
+                aadhar: aadhar,
+                phone: phone,
                 isHead: false,
                 dateAdded: new Date().toISOString()
             };
@@ -1634,6 +2050,11 @@
             
             // Reset form
             document.getElementById('member-form').reset();
+            
+            // Clear validation states
+            document.querySelectorAll('#member-form .form-control').forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
             
             // Update members list
             updateMembersList(householdId);
@@ -1673,8 +2094,24 @@
                     memberInfo += ' <small class="text-muted">(No DOB)</small>';
                 }
                 
+                // Show contact info if available
+                let contactInfo = '';
+                if (member.aadhar || member.phone) {
+                    contactInfo = '<div class="member-contact-info">';
+                    if (member.aadhar) {
+                        contactInfo += `<span><i class="bi bi-person-badge"></i> ${member.aadhar}</span>`;
+                    }
+                    if (member.phone) {
+                        contactInfo += `<span><i class="bi bi-telephone"></i> ${member.phone}</span>`;
+                    }
+                    contactInfo += '</div>';
+                }
+                
                 li.innerHTML = `
-                    ${memberInfo}
+                    <div>
+                        ${memberInfo}
+                        ${contactInfo}
+                    </div>
                     <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${member.id}', 'member')">
                         <i class="bi bi-trash"></i>
                     </button>
@@ -1765,6 +2202,112 @@
             removeItem(memberId, 'member');
         }
 
+        // Edit household
+        function editHousehold(householdId) {
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Find household
+            const household = data.households.find(h => h.id === householdId);
+            if (!household) return;
+            
+            // Find HOF
+            const hof = data.members.find(m => m.householdId === householdId && m.isHead);
+            if (!hof) return;
+            
+            // Populate edit form
+            document.getElementById('edit-household-id').value = household.id;
+            document.getElementById('edit-hof-name').value = hof.name;
+            document.getElementById('edit-hof-dob').value = hof.dob;
+            document.getElementById('edit-hof-aadhar').value = hof.aadhar || '';
+            document.getElementById('edit-hof-phone').value = hof.phone || '';
+            document.getElementById('edit-house-number').value = household.houseNumber;
+            document.getElementById('edit-address').value = household.address || '';
+            
+            // Set gender
+            if (hof.gender === 'male') {
+                document.getElementById('edit-hof-gender-male').checked = true;
+            } else {
+                document.getElementById('edit-hof-gender-female').checked = true;
+            }
+            
+            // Clear validation states
+            document.querySelectorAll('#edit-household-form .form-control').forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
+            
+            // Show edit modal
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+        }
+
+        // Save household edit
+        function saveHouseholdEdit() {
+            const householdId = document.getElementById('edit-household-id').value;
+            const hofName = document.getElementById('edit-hof-name').value;
+            const hofDob = document.getElementById('edit-hof-dob').value;
+            const hofGender = document.querySelector('input[name="edit-hof-gender"]:checked').value;
+            const hofAadhar = document.getElementById('edit-hof-aadhar').value.trim();
+            const hofPhone = document.getElementById('edit-hof-phone').value.trim();
+            const houseNumber = document.getElementById('edit-house-number').value;
+            const address = document.getElementById('edit-address').value;
+            
+            // Validate Aadhar and phone if provided
+            const aadharValid = validateAadhar(document.getElementById('edit-hof-aadhar'), 'edit-hof-aadhar-feedback', 'edit-hof-aadhar-valid-feedback');
+            const phoneValid = validatePhone(document.getElementById('edit-hof-phone'), 'edit-hof-phone-feedback', 'edit-hof-phone-valid-feedback');
+            
+            if (!aadharValid || !phoneValid) {
+                showToast('Please fix validation errors before saving.', 'error');
+                return;
+            }
+            
+            // Validate house number
+            if (!validateEditHouseNumber(houseNumber)) {
+                showToast('House number already exists. Please enter a unique house number.', 'error');
+                return;
+            }
+            
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Update household
+            const household = data.households.find(h => h.id === householdId);
+            if (household) {
+                household.headOfFamily = hofName;
+                household.houseNumber = houseNumber;
+                household.address = address;
+            }
+            
+            // Update HOF member
+            const hof = data.members.find(m => m.householdId === householdId && m.isHead);
+            if (hof) {
+                hof.name = hofName;
+                hof.dob = hofDob;
+                hof.gender = hofGender;
+                hof.aadhar = hofAadhar;
+                hof.phone = hofPhone;
+            }
+            
+            // Save data
+            localStorage.setItem('censusData', JSON.stringify(data));
+            
+            // Close modal
+            closeEditModal();
+            
+            // Update dashboard
+            updateDashboard();
+            
+            // Refresh households list
+            displayHouseholds();
+            
+            // Show success toast
+            showToast('Household updated successfully!', 'success');
+        }
+
         // Finish household
         function finishHousehold() {
             const householdId = document.getElementById('current-household-id').value;
@@ -1785,6 +2328,11 @@
             // Reset forms
             document.getElementById('hof-form').reset();
             document.getElementById('member-form').reset();
+            
+            // Clear validation states
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
             
             // Hide add members section
             document.getElementById('add-members-section').classList.add('d-none');
@@ -1983,7 +2531,7 @@
                 '50-59': { male: 0, female: 0 },
                 '60-69': { male: 0, female: 0 },
                 '70-79': { male: 0, female: 0 },
-                '80-84': { male: 0, female: 0 },
+                '81-84': { male: 0, female: 0 },
                 '85+': { male: 0, female: 0 }
             };
             
@@ -2132,6 +2680,9 @@
                     </div>
                     <div class="d-flex align-items-center">
                         <span class="badge bg-white bg-opacity-20 me-2">${members.length} members</span>
+                        <button class="btn btn-sm btn-outline-primary bg-transparent border-white text-white me-2" onclick="editHousehold('${household.id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
                         <button class="btn btn-sm btn-outline-danger bg-transparent border-white text-white" onclick="removeItem('${household.id}', 'household')">
                             <i class="bi bi-trash"></i>
                         </button>
@@ -2151,6 +2702,20 @@
                     
                     const hofElement = document.createElement('div');
                     hofElement.className = 'member-item';
+                    
+                    // Build contact info
+                    let contactInfo = '';
+                    if (hof.aadhar || hof.phone) {
+                        contactInfo = '<div class="member-contact-info">';
+                        if (hof.aadhar) {
+                            contactInfo += `<span><i class="bi bi-person-badge"></i> ${hof.aadhar}</span>`;
+                        }
+                        if (hof.phone) {
+                            contactInfo += `<span><i class="bi bi-telephone"></i> ${hof.phone}</span>`;
+                        }
+                        contactInfo += '</div>';
+                    }
+                    
                     hofElement.innerHTML = `
                         <div class="member-info">
                             <div class="member-name">
@@ -2161,6 +2726,7 @@
                             <div class="member-details">
                                 ${hof.dob ? `${hofAge} years (${hofAgeGroup})` : 'No DOB'}
                             </div>
+                            ${contactInfo}
                         </div>
                     `;
                     householdBody.appendChild(hofElement);
@@ -2173,6 +2739,19 @@
                     const ageGroup = member.dob ? getAgeGroup(age) : '';
                     const genderIcon = member.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
                     
+                    // Build contact info
+                    let contactInfo = '';
+                    if (member.aadhar || member.phone) {
+                        contactInfo = '<div class="member-contact-info">';
+                        if (member.aadhar) {
+                            contactInfo += `<span><i class="bi bi-person-badge"></i> ${member.aadhar}</span>`;
+                        }
+                        if (member.phone) {
+                            contactInfo += `<span><i class="bi bi-telephone"></i> ${member.phone}</span>`;
+                        }
+                        contactInfo += '</div>';
+                    }
+                    
                     const memberElement = document.createElement('div');
                     memberElement.className = 'member-item';
                     memberElement.innerHTML = `
@@ -2184,6 +2763,7 @@
                             <div class="member-details">
                                 ${member.dob ? `${age} years (${ageGroup})` : 'No DOB'}
                             </div>
+                            ${contactInfo}
                         </div>
                         <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${member.id}', 'member')">
                             <i class="bi bi-trash"></i>
@@ -2555,7 +3135,7 @@
                     
                     // Create table headers
                     const tableHeaders = [
-                        "S.No", "House No", "HOF", "Members", "Age", "DOB"
+                        "S.No", "House No", "HOF", "Members", "Age", "DOB", "Aadhar", "Phone"
                     ];
                     
                     // Create table data
@@ -2578,7 +3158,9 @@
                                 household.headOfFamily,
                                 member.name,
                                 age,
-                                dob
+                                dob,
+                                member.aadhar || '',
+                                member.phone || ''
                             ]);
                         });
                         
@@ -2599,7 +3181,9 @@
                         { wch: 25 },  // HOF
                         { wch: 25 },  // Members
                         { wch: 8 },   // Age
-                        { wch: 12 }   // DOB
+                        { wch: 12 },  // DOB
+                        { wch: 15 },  // Aadhar
+                        { wch: 15 }   // Phone
                     ];
                     
                     // Add worksheet to workbook
@@ -2838,4 +3422,4 @@
         }
     </script>
 </body>
-</html>
+</html
