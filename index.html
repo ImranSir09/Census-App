@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Population Census</title>
+    <title>Population Census Register</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -157,6 +157,22 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
             outline: none;
+        }
+        
+        .form-control.is-invalid {
+            border-color: var(--danger);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .invalid-feedback {
+            display: block;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            color: var(--danger);
         }
         
         .form-label {
@@ -964,6 +980,26 @@
             color: var(--info);
             margin-right: 8px;
         }
+        
+        .duplicate-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .duplicate-warning i {
+            margin-right: 8px;
+            color: #f59e0b;
+        }
+        
+        .duplicate-warning.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -971,7 +1007,7 @@
     <div class="container mx-auto px-4 pt-6">
         <div class="header-gradient">
             <h1 class="text-2xl font-bold mb-1">Population Census</h1>
-            <p class="text-indigo-200 text-sm font-light">BLO Application</p>
+            <p class="text-indigo-200 text-sm font-light">A BLO's Vision, For All BLOs</p>
         </div>
     </div>
 
@@ -1093,6 +1129,10 @@
                         <div class="mb-3">
                             <label for="house-number" class="form-label">House Number</label>
                             <input type="text" class="form-control" id="house-number" placeholder="Enter house number" required>
+                            <div class="duplicate-warning hidden" id="house-number-warning">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <span>This house number already exists. Please enter a unique house number.</span>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="address" class="form-label">Address (Optional)</label>
@@ -1208,7 +1248,7 @@
                     
                     <div class="median-tip">
                         <i class="bi bi-info-circle-fill"></i>
-                        <strong>Tip:</strong> Excel downloads work perfectly in Median.co APK. Files will be saved to your device's Downloads folder.
+                        <strong>Tip:</strong> Excel downloads works perfectly. Files will be saved to your device's Downloads folder.
                     </div>
                 </div>
             </div>
@@ -1267,8 +1307,8 @@
                         <i class="bi bi-info-circle-fill"></i>
                         About
                     </h5>
-                    <p class="mb-2 text-gray-700">Population Census Register App v2.5.1</p>
-                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani (BLO 114 Senzi 42-Kokernag ST. Contact 9149690096.</p>
+                    <p class="mb-2 text-gray-700">Population Census 2.5.1</p>
+                    <p class="mb-0 text-gray-500 font-light">Imran Gani Mugloo (BLO 114 SENZI 42-KOLERNAG ST), Contact 9149690096.</p>
                 </div>
             </div>
         </div>
@@ -1361,6 +1401,11 @@
                 addHeadOfFamily();
             });
             
+            // House number validation
+            document.getElementById('house-number').addEventListener('input', function() {
+                validateHouseNumber(this.value);
+            });
+            
             // Member Form submission
             document.getElementById('member-form').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -1448,6 +1493,15 @@
             initAgeChart();
         }
 
+        // Generate strong unique ID (UUID-like)
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
         // Show specific view
         function showView(viewId) {
             document.querySelectorAll('.view').forEach(view => {
@@ -1466,6 +1520,31 @@
             }
         }
 
+        // Validate house number for duplicates
+        function validateHouseNumber(houseNumber) {
+            if (!houseNumber) {
+                document.getElementById('house-number').classList.remove('is-invalid');
+                document.getElementById('house-number-warning').classList.add('hidden');
+                return true;
+            }
+            
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Check if house number already exists
+            const existingHousehold = data.households.find(h => h.houseNumber.toLowerCase() === houseNumber.toLowerCase());
+            
+            if (existingHousehold) {
+                document.getElementById('house-number').classList.add('is-invalid');
+                document.getElementById('house-number-warning').classList.remove('hidden');
+                return false;
+            } else {
+                document.getElementById('house-number').classList.remove('is-invalid');
+                document.getElementById('house-number-warning').classList.add('hidden');
+                return true;
+            }
+        }
+
         // Add Head of Family
         function addHeadOfFamily() {
             const name = document.getElementById('hof-name').value;
@@ -1474,12 +1553,18 @@
             const houseNumber = document.getElementById('house-number').value;
             const address = document.getElementById('address').value;
             
+            // Validate house number
+            if (!validateHouseNumber(houseNumber)) {
+                showToast('House number already exists. Please enter a unique house number.', 'error');
+                return;
+            }
+            
             // Get existing data
             const data = JSON.parse(localStorage.getItem('censusData'));
             
-            // Create new household
+            // Create new household with strong UUID
             const newHousehold = {
-                id: Date.now().toString(),
+                id: generateUUID(),
                 headOfFamily: name,
                 houseNumber: houseNumber,
                 address: address,
@@ -1489,9 +1574,9 @@
             // Add to data
             data.households.push(newHousehold);
             
-            // Create member record for HOF
+            // Create member record for HOF with strong UUID
             const hofMember = {
-                id: Date.now().toString() + '_hof',
+                id: generateUUID(),
                 householdId: newHousehold.id,
                 name: name,
                 dob: dob,
@@ -1530,9 +1615,9 @@
             // Get existing data
             const data = JSON.parse(localStorage.getItem('censusData'));
             
-            // Create new member
+            // Create new member with strong UUID
             const newMember = {
-                id: Date.now().toString(),
+                id: generateUUID(),
                 householdId: householdId,
                 name: name,
                 dob: dob,
@@ -1590,7 +1675,7 @@
                 
                 li.innerHTML = `
                     ${memberInfo}
-                    <button class="btn btn-sm btn-outline-danger" onclick="removeMember('${member.id}')">
+                    <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${member.id}', 'member')">
                         <i class="bi bi-trash"></i>
                     </button>
                 `;
@@ -1599,44 +1684,48 @@
             });
         }
 
-        // Remove member
-        function removeMember(memberId) {
+        // Unified removal function for households and members
+        function removeItem(itemId, itemType) {
             // Get existing data
             const data = JSON.parse(localStorage.getItem('censusData'));
             
-            // Find the member to be removed
-            const member = data.members.find(m => m.id === memberId);
-            
-            if (!member) return;
-            
-            // Check if it's the HOF
-            if (member.isHead) {
-                if (!confirm('Are you sure you want to remove the Head of Family? This will also remove the entire household.')) {
-                    return;
-                }
+            if (itemType === 'household') {
+                // Remove household and all its members
+                data.households = data.households.filter(h => h.id !== itemId);
+                data.members = data.members.filter(m => m.householdId !== itemId);
                 
-                // Remove the household
-                data.households = data.households.filter(h => h.id !== member.householdId);
-                
-                // Remove all members of this household
-                data.members = data.members.filter(m => m.householdId !== member.householdId);
+                showToast('Household removed successfully!', 'info');
                 
                 // If we're in the add household view, reset it
                 if (!document.getElementById('add-household-view').classList.contains('d-none')) {
                     document.getElementById('hof-form').reset();
                     document.getElementById('add-members-section').classList.add('d-none');
                 }
+            } else if (itemType === 'member') {
+                // Find the member to be removed
+                const member = data.members.find(m => m.id === itemId);
                 
-                showToast('Household removed successfully!', 'info');
-            } else {
-                if (!confirm('Are you sure you want to remove this member?')) {
-                    return;
+                if (!member) return;
+                
+                // Check if it's the HOF
+                if (member.isHead) {
+                    // Remove the entire household
+                    data.households = data.households.filter(h => h.id !== member.householdId);
+                    data.members = data.members.filter(m => m.householdId !== member.householdId);
+                    
+                    showToast('Head of Family removed. Entire household deleted.', 'info');
+                    
+                    // If we're in the add household view, reset it
+                    if (!document.getElementById('add-household-view').classList.contains('d-none')) {
+                        document.getElementById('hof-form').reset();
+                        document.getElementById('add-members-section').classList.add('d-none');
+                    }
+                } else {
+                    // Remove just this member
+                    data.members = data.members.filter(m => m.id !== itemId);
+                    
+                    showToast('Member removed successfully!', 'info');
                 }
-                
-                // Remove just this member
-                data.members = data.members.filter(m => m.id !== memberId);
-                
-                showToast('Member removed successfully!', 'info');
             }
             
             // Save data
@@ -1651,6 +1740,29 @@
             
             // Update dashboard
             updateDashboard();
+            
+            // Refresh households list if we're in that view
+            if (!document.getElementById('households-view').classList.contains('d-none')) {
+                displayHouseholds();
+            }
+        }
+
+        // Remove household (for backward compatibility)
+        function removeHousehold(householdId) {
+            if (!confirm('Are you sure you want to remove this entire household? This action cannot be undone.')) {
+                return;
+            }
+            
+            removeItem(householdId, 'household');
+        }
+
+        // Remove member from household (for backward compatibility)
+        function removeMemberFromHousehold(memberId) {
+            if (!confirm('Are you sure you want to remove this member?')) {
+                return;
+            }
+            
+            removeItem(memberId, 'member');
         }
 
         // Finish household
@@ -1706,7 +1818,7 @@
         // Get age group based on age
         function getAgeGroup(age) {
             if (age <= 16) return '0-16';
-            if (age === 17) return '17';
+            if (age >= 17 && age <= 17) return '17-17';
             if (age >= 18 && age <= 19) return '18-19';
             if (age >= 20 && age <= 29) return '20-29';
             if (age >= 30 && age <= 39) return '30-39';
@@ -2020,7 +2132,7 @@
                     </div>
                     <div class="d-flex align-items-center">
                         <span class="badge bg-white bg-opacity-20 me-2">${members.length} members</span>
-                        <button class="btn btn-sm btn-outline-danger bg-transparent border-white text-white" onclick="removeHousehold('${household.id}')">
+                        <button class="btn btn-sm btn-outline-danger bg-transparent border-white text-white" onclick="removeItem('${household.id}', 'household')">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -2073,7 +2185,7 @@
                                 ${member.dob ? `${age} years (${ageGroup})` : 'No DOB'}
                             </div>
                         </div>
-                        <button class="btn btn-sm btn-outline-danger" onclick="removeMemberFromHousehold('${member.id}')">
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${member.id}', 'member')">
                             <i class="bi bi-trash"></i>
                         </button>
                     `;
@@ -2164,59 +2276,6 @@
             householdCards.forEach(card => {
                 householdsList.appendChild(card);
             });
-        }
-
-        // Remove household
-        function removeHousehold(householdId) {
-            if (!confirm('Are you sure you want to remove this entire household? This action cannot be undone.')) {
-                return;
-            }
-            
-            // Get existing data
-            const data = JSON.parse(localStorage.getItem('censusData'));
-            
-            // Remove the household
-            data.households = data.households.filter(h => h.id !== householdId);
-            
-            // Remove all members of this household
-            data.members = data.members.filter(m => m.householdId !== householdId);
-            
-            // Save data
-            localStorage.setItem('censusData', JSON.stringify(data));
-            
-            // Refresh households list
-            displayHouseholds();
-            
-            // Update dashboard
-            updateDashboard();
-            
-            // Show success toast
-            showToast('Household removed successfully!', 'info');
-        }
-
-        // Remove member from household (in households view)
-        function removeMemberFromHousehold(memberId) {
-            if (!confirm('Are you sure you want to remove this member?')) {
-                return;
-            }
-            
-            // Get existing data
-            const data = JSON.parse(localStorage.getItem('censusData'));
-            
-            // Remove just this member
-            data.members = data.members.filter(m => m.id !== memberId);
-            
-            // Save data
-            localStorage.setItem('censusData', JSON.stringify(data));
-            
-            // Refresh households list
-            displayHouseholds();
-            
-            // Update dashboard
-            updateDashboard();
-            
-            // Show success toast
-            showToast('Member removed successfully!', 'info');
         }
 
         // Generate PDF Report
