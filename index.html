@@ -728,6 +728,17 @@
             color: white;
         }
         
+        .btn-outline-warning {
+            color: var(--warning);
+            border: 1px solid var(--warning);
+            background-color: transparent;
+        }
+        
+        .btn-outline-warning:hover {
+            background-color: var(--warning);
+            color: white;
+        }
+        
         .form-check-inline {
             display: inline-flex;
             align-items: center;
@@ -1131,6 +1142,7 @@
             font-size: 11px;
             color: var(--gray);
             margin-top: 2px;
+            flex-wrap: wrap;
         }
         
         .member-contact-info i {
@@ -1140,6 +1152,13 @@
         
         .member-contact-info span {
             margin-right: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .member-actions {
+            display: flex;
+            gap: 4px;
         }
     </style>
 </head>
@@ -1148,7 +1167,7 @@
     <div class="container mx-auto px-4 pt-6">
         <div class="header-gradient">
             <h1 class="text-2xl font-bold mb-1">Population Census Register</h1>
-            <p class="text-indigo-200 text-sm font-light">By Imran Gani Mugloo</p>
+            <p class="text-indigo-200 text-sm font-light">Imran Gani Mugloo</p>
         </div>
     </div>
 
@@ -1441,7 +1460,7 @@
                     
                     <div class="median-tip">
                         <i class="bi bi-info-circle-fill"></i>
-                        <strong>Tip:</strong> Excel downloads work perfectly. Files will be saved to your device's Downloads folder.
+                        <strong>Tip:</strong> Excel downloads work perfectly in Median.co APK. Files will be saved to your device's Downloads folder.
                     </div>
                 </div>
             </div>
@@ -1501,7 +1520,7 @@
                         About
                     </h5>
                     <p class="mb-2 text-gray-700">Population Census App v2.5.1</p>
-                    <p class="mb-0 text-gray-500 font-light">Developed by Imran Gani Mugloo (BLO 114-Senzi, 42 Kokernag ST  9149690096).</p>
+                    <p class="mb-0 text-gray-500 font-light">Developed By Imran Gani Mugloo BLO 114 Senzi 42-Kokernag ST (9149690096)</p>
                 </div>
             </div>
         </div>
@@ -1564,7 +1583,7 @@
     </div>
 
     <!-- Edit Household Modal -->
-    <div class="edit-modal" id="edit-modal">
+    <div class="edit-modal" id="edit-household-modal">
         <div class="edit-modal-content">
             <h3 class="edit-modal-title">Edit Household</h3>
             <div class="edit-modal-body">
@@ -1632,8 +1651,71 @@
                 </form>
             </div>
             <div class="edit-modal-footer">
-                <button class="btn btn-secondary" id="cancel-edit">Cancel</button>
-                <button class="btn btn-primary" id="save-edit">Save Changes</button>
+                <button class="btn btn-secondary" id="cancel-edit-household">Cancel</button>
+                <button class="btn btn-primary" id="save-edit-household">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div class="edit-modal" id="edit-member-modal">
+        <div class="edit-modal-content">
+            <h3 class="edit-modal-title">Edit Member</h3>
+            <div class="edit-modal-body">
+                <form id="edit-member-form">
+                    <input type="hidden" id="edit-member-id">
+                    <div class="mb-3">
+                        <label for="edit-member-name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="edit-member-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-member-dob" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="edit-member-dob" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Gender</label>
+                        <div class="mt-1">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-member-gender" id="edit-member-gender-male" value="male" required>
+                                <label class="form-check-label" for="edit-member-gender-male">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="edit-member-gender" id="edit-member-gender-female" value="female" required>
+                                <label class="form-check-label" for="edit-member-gender-female">Female</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-member-aadhar" class="form-label">Aadhar Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                            <input type="text" class="form-control" id="edit-member-aadhar" placeholder="Enter 12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}">
+                        </div>
+                        <div class="invalid-feedback" id="edit-member-aadhar-feedback">
+                            Please enter a valid 12-digit Aadhar number.
+                        </div>
+                        <div class="valid-feedback" id="edit-member-aadhar-valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-member-phone" class="form-label">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input type="text" class="form-control" id="edit-member-phone" placeholder="Enter 10-digit phone number" maxlength="10" pattern="[0-9]{10}">
+                        </div>
+                        <div class="invalid-feedback" id="edit-member-phone-feedback">
+                            Please enter a valid 10-digit phone number.
+                        </div>
+                        <div class="valid-feedback" id="edit-member-phone-valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="edit-modal-footer">
+                <button class="btn btn-secondary" id="cancel-edit-member">Cancel</button>
+                <button class="btn btn-primary" id="save-edit-member">Save Changes</button>
             </div>
         </div>
     </div>
@@ -1704,6 +1786,16 @@
                 validatePhone(this, 'edit-hof-phone-feedback', 'edit-hof-phone-valid-feedback');
             });
             
+            // Edit Member Aadhar validation
+            document.getElementById('edit-member-aadhar').addEventListener('input', function() {
+                validateAadhar(this, 'edit-member-aadhar-feedback', 'edit-member-aadhar-valid-feedback');
+            });
+            
+            // Edit Member Phone validation
+            document.getElementById('edit-member-phone').addEventListener('input', function() {
+                validatePhone(this, 'edit-member-phone-feedback', 'edit-member-phone-valid-feedback');
+            });
+            
             // Edit house number validation
             document.getElementById('edit-house-number').addEventListener('input', function() {
                 validateEditHouseNumber(this.value);
@@ -1769,13 +1861,22 @@
                 displayHouseholds();
             });
             
-            // Edit modal functionality
-            document.getElementById('cancel-edit').addEventListener('click', function() {
-                closeEditModal();
+            // Edit household modal functionality
+            document.getElementById('cancel-edit-household').addEventListener('click', function() {
+                closeEditHouseholdModal();
             });
             
-            document.getElementById('save-edit').addEventListener('click', function() {
+            document.getElementById('save-edit-household').addEventListener('click', function() {
                 saveHouseholdEdit();
+            });
+            
+            // Edit member modal functionality
+            document.getElementById('cancel-edit-member').addEventListener('click', function() {
+                closeEditMemberModal();
+            });
+            
+            document.getElementById('save-edit-member').addEventListener('click', function() {
+                saveMemberEdit();
             });
             
             // Download modal functionality
@@ -2112,13 +2213,119 @@
                         ${memberInfo}
                         ${contactInfo}
                     </div>
-                    <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${member.id}', 'member')">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                    <div class="member-actions">
+                        <button class="btn btn-sm btn-outline-warning me-1" onclick="editMember('${member.id}')" title="Edit Member">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${member.id}', 'member')" title="Remove Member">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 `;
                 
                 membersList.appendChild(li);
             });
+        }
+
+        // Edit member
+        function editMember(memberId) {
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Find member
+            const member = data.members.find(m => m.id === memberId);
+            if (!member) return;
+            
+            // Populate edit form
+            document.getElementById('edit-member-id').value = member.id;
+            document.getElementById('edit-member-name').value = member.name;
+            document.getElementById('edit-member-dob').value = member.dob;
+            document.getElementById('edit-member-aadhar').value = member.aadhar || '';
+            document.getElementById('edit-member-phone').value = member.phone || '';
+            
+            // Set gender
+            if (member.gender === 'male') {
+                document.getElementById('edit-member-gender-male').checked = true;
+            } else {
+                document.getElementById('edit-member-gender-female').checked = true;
+            }
+            
+            // Clear validation states
+            document.querySelectorAll('#edit-member-form .form-control').forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
+            
+            // Show edit modal
+            document.getElementById('edit-member-modal').classList.add('active');
+        }
+
+        // Close edit member modal
+        function closeEditMemberModal() {
+            document.getElementById('edit-member-modal').classList.remove('active');
+        }
+
+        // Save member edit
+        function saveMemberEdit() {
+            const memberId = document.getElementById('edit-member-id').value;
+            const name = document.getElementById('edit-member-name').value;
+            const dob = document.getElementById('edit-member-dob').value;
+            const gender = document.querySelector('input[name="edit-member-gender"]:checked').value;
+            const aadhar = document.getElementById('edit-member-aadhar').value.trim();
+            const phone = document.getElementById('edit-member-phone').value.trim();
+            
+            // Validate Aadhar and phone if provided
+            const aadharValid = validateAadhar(document.getElementById('edit-member-aadhar'), 'edit-member-aadhar-feedback', 'edit-member-aadhar-valid-feedback');
+            const phoneValid = validatePhone(document.getElementById('edit-member-phone'), 'edit-member-phone-feedback', 'edit-member-phone-valid-feedback');
+            
+            if (!aadharValid || !phoneValid) {
+                showToast('Please fix validation errors before saving.', 'error');
+                return;
+            }
+            
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('censusData'));
+            
+            // Update member
+            const member = data.members.find(m => m.id === memberId);
+            if (member) {
+                member.name = name;
+                member.dob = dob;
+                member.gender = gender;
+                member.aadhar = aadhar;
+                member.phone = phone;
+            }
+            
+            // If this is the HOF, also update the household name
+            if (member.isHead) {
+                const household = data.households.find(h => h.id === member.householdId);
+                if (household) {
+                    household.headOfFamily = name;
+                }
+            }
+            
+            // Save data
+            localStorage.setItem('censusData', JSON.stringify(data));
+            
+            // Close modal
+            closeEditMemberModal();
+            
+            // Update dashboard
+            updateDashboard();
+            
+            // Refresh households list if we're in that view
+            if (!document.getElementById('households-view').classList.contains('d-none')) {
+                displayHouseholds();
+            }
+            
+            // Update members list if we're in the add household view
+            if (!document.getElementById('add-household-view').classList.contains('d-none') && 
+                !document.getElementById('add-members-section').classList.contains('d-none')) {
+                const householdId = document.getElementById('current-household-id').value;
+                updateMembersList(householdId);
+            }
+            
+            // Show success toast
+            showToast('Member updated successfully!', 'success');
         }
 
         // Unified removal function for households and members
@@ -2184,24 +2391,6 @@
             }
         }
 
-        // Remove household (for backward compatibility)
-        function removeHousehold(householdId) {
-            if (!confirm('Are you sure you want to remove this entire household? This action cannot be undone.')) {
-                return;
-            }
-            
-            removeItem(householdId, 'household');
-        }
-
-        // Remove member from household (for backward compatibility)
-        function removeMemberFromHousehold(memberId) {
-            if (!confirm('Are you sure you want to remove this member?')) {
-                return;
-            }
-            
-            removeItem(memberId, 'member');
-        }
-
         // Edit household
         function editHousehold(householdId) {
             // Get existing data
@@ -2237,12 +2426,12 @@
             });
             
             // Show edit modal
-            document.getElementById('edit-modal').classList.add('active');
+            document.getElementById('edit-household-modal').classList.add('active');
         }
 
-        // Close edit modal
-        function closeEditModal() {
-            document.getElementById('edit-modal').classList.remove('active');
+        // Close edit household modal
+        function closeEditHouseholdModal() {
+            document.getElementById('edit-household-modal').classList.remove('active');
         }
 
         // Save household edit
@@ -2296,7 +2485,7 @@
             localStorage.setItem('censusData', JSON.stringify(data));
             
             // Close modal
-            closeEditModal();
+            closeEditHouseholdModal();
             
             // Update dashboard
             updateDashboard();
@@ -2373,8 +2562,8 @@
             if (age >= 40 && age <= 49) return '40-49';
             if (age >= 50 && age <= 59) return '50-59';
             if (age >= 60 && age <= 69) return '60-69';
-            if (age >= 70 && age <= 80) return '70-80';
-            if (age >= 81 && age <= 84) return '81-84';
+            if (age >= 70 && age <= 80) return '70-79';
+            if (age >= 81 && age <= 84) return '80-84';
             return '85+';
         }
 
@@ -2531,7 +2720,7 @@
                 '50-59': { male: 0, female: 0 },
                 '60-69': { male: 0, female: 0 },
                 '70-79': { male: 0, female: 0 },
-                '81-84': { male: 0, female: 0 },
+                '80-84': { male: 0, female: 0 },
                 '85+': { male: 0, female: 0 }
             };
             
@@ -2680,10 +2869,10 @@
                     </div>
                     <div class="d-flex align-items-center">
                         <span class="badge bg-white bg-opacity-20 me-2">${members.length} members</span>
-                        <button class="btn btn-sm btn-outline-primary bg-transparent border-white text-white me-2" onclick="editHousehold('${household.id}')">
+                        <button class="btn btn-sm btn-outline-primary bg-transparent border-white text-white me-2" onclick="editHousehold('${household.id}')" title="Edit Household">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger bg-transparent border-white text-white" onclick="removeItem('${household.id}', 'household')">
+                        <button class="btn btn-sm btn-outline-danger bg-transparent border-white text-white" onclick="removeItem('${household.id}', 'household')" title="Remove Household">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -2728,6 +2917,14 @@
                             </div>
                             ${contactInfo}
                         </div>
+                        <div class="member-actions">
+                            <button class="btn btn-sm btn-outline-warning me-1" onclick="editMember('${hof.id}')" title="Edit Member">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${hof.id}', 'member')" title="Remove Member">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                     `;
                     householdBody.appendChild(hofElement);
                 }
@@ -2765,9 +2962,14 @@
                             </div>
                             ${contactInfo}
                         </div>
-                        <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${member.id}', 'member')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <div class="member-actions">
+                            <button class="btn btn-sm btn-outline-warning me-1" onclick="editMember('${member.id}')" title="Edit Member">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${member.id}', 'member')" title="Remove Member">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                     `;
                     householdBody.appendChild(memberElement);
                 });
@@ -3422,4 +3624,4 @@
         }
     </script>
 </body>
-</html
+</html>
