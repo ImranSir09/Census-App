@@ -1782,8 +1782,8 @@
     <!-- Header -->
     <div class="container mx-auto px-4 pt-6">
         <div class="header-gradient">
-            <h1 class="text-2xl font-bold mb-1">Population Census Register</h1>
-            <p class="text-indigo-200 text-sm font-light">Field Worker Application</p>
+            <h1 class="text-2xl font-bold mb-1">BLO Census Register</h1>
+            <p class="text-indigo-200 text-sm font-light">Developed by : Imran Gani Mugloo (9149690096)</p>
         </div>
     </div>
 
@@ -2077,7 +2077,7 @@
                     
                     <div class="median-tip">
                         <i class="bi bi-info-circle-fill"></i>
-                        <strong>Tip:</strong> Excel downloads work perfectly in Median.co APK. Files will be saved to your device's Downloads folder.
+                        <strong>Tip:</strong> Files will be saved to your device's Downloads folder.
                     </div>
                 </div>
             </div>
@@ -2136,8 +2136,8 @@
                         <i class="bi bi-info-circle-fill"></i>
                         About
                     </h5>
-                    <p class="mb-2 text-gray-700">Population Census Register App v1.0</p>
-                    <p class="mb-0 text-gray-500 font-light">Designed for field workers to collect census data offline.</p>
+                    <p class="mb-2 text-gray-700">BLO Register App v2.5.1</p>
+                    <p class="mb-0 text-gray-500 font-light">Designed by : Imran Gani Mugloo (BLO 114 Senzi, 42 Kokernag ST).</p>
                 </div>
             </div>
         </div>
@@ -2340,8 +2340,8 @@
     <script>
         // Age group configuration
         const AGE_GROUPS = [
-            '0-16', '17', '18-19', '20-29', '30-39', 
-            '40-49', '50-59', '60-69', '70-80', '81-84', '85+'
+            '0-16', '17-17', '18-19', '20-29', '30-39', 
+            '40-49', '50-59', '60-69', '70-79', '80-84', '85+'
         ];
         
         // Initialize age groups data structure
@@ -2439,15 +2439,15 @@
             // Get age group based on age
             getAgeGroup(age) {
                 if (age <= 16) return '0-16';
-                if (age === 17) return '17';
+                if (age >= 17 && age <= 17) return '17-17';
                 if (age >= 18 && age <= 19) return '18-19';
                 if (age >= 20 && age <= 29) return '20-29';
                 if (age >= 30 && age <= 39) return '30-39';
                 if (age >= 40 && age <= 49) return '40-49';
                 if (age >= 50 && age <= 59) return '50-59';
                 if (age >= 60 && age <= 69) return '60-69';
-                if (age >= 70 && age <= 80) return '70-80';
-                if (age >= 81 && age <= 84) return '81-84';
+                if (age >= 70 && age <= 79) return '70-79';
+                if (age >= 80 && age <= 84) return '80-84';
                 return '85+';
             },
             
