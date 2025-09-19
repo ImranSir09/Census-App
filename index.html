@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Population Census Register</title>
+    <title>BLO Register</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -44,7 +44,6 @@
             --light-gray: #f1f5f9;
             --extra-light-gray: #f8fafc;
             --border: #e2e8f0;
-            --shadow: rgba(0, 0, 0, 0.1);
         }
         
         * {
@@ -66,7 +65,7 @@
         
         .view {
             display: none;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.2s ease-in-out;
         }
         
         .view.active {
@@ -78,9 +77,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        @keyframes scaleIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         .card {
@@ -89,16 +88,15 @@
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255, 255, 255, 0.3);
             overflow: hidden;
             margin-bottom: 16px;
-            animation: scaleIn 0.3s ease-in-out;
         }
         
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.05), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
         }
         
         .btn {
@@ -123,8 +121,8 @@
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3), 0 4px 6px -2px rgba(79, 70, 229, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px -2px rgba(79, 70, 229, 0.3), 0 4px 8px -2px rgba(79, 70, 229, 0.2);
         }
         
         .btn-success {
@@ -157,18 +155,9 @@
             box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2), 0 2px 4px -1px rgba(245, 158, 11, 0.1);
         }
         
-        .btn-outline-primary {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            box-shadow: none;
-        }
-        
-        .btn-outline-primary:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2), 0 2px 4px -1px rgba(79, 70, 229, 0.1);
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
         }
         
         .form-control, .form-select {
@@ -249,7 +238,7 @@
         .nav-tabs-container {
             display: flex;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             height: 100%;
         }
         
@@ -314,6 +303,43 @@
             box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4), 0 10px 10px -5px rgba(79, 70, 229, 0.3);
         }
         
+        .fab-add-member {
+            position: fixed;
+            bottom: 140px;
+            right: 16px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3), 0 4px 6px -2px rgba(16, 185, 129, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 998;
+            border: none;
+        }
+        
+        .fab-add-member.visible {
+            display: flex;
+        }
+        
+        .fab-add-member:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.4), 0 10px 10px -5px rgba(16, 185, 129, 0.3);
+        }
+        
+        .fab-add-member::before {
+            content: '';
+            position: absolute;
+            top: -16px;
+            right: 16px;
+            width: 2px;
+            height: 16px;
+            background: linear-gradient(to bottom, transparent, var(--success));
+        }
+        
         .stat-card {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
@@ -321,16 +347,15 @@
             border-radius: 16px;
             padding: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: scaleIn 0.3s ease-in-out;
         }
         
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.05), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
         }
         
         .stat-card.households {
@@ -440,6 +465,11 @@
             color: white;
         }
         
+        .badge-seventeen {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
         .alert {
             border-radius: 12px;
             border: none;
@@ -481,11 +511,6 @@
             font-family: 'Inter', sans-serif;
         }
         
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
         .toast-success {
             border-left-color: var(--success);
         }
@@ -525,20 +550,6 @@
             margin-right: 8px;
             color: var(--primary);
             font-size: 18px;
-        }
-        
-        .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
         
         .grid {
@@ -729,11 +740,6 @@
             background-color: #dbeafe !important;
         }
         
-        .btn-sm {
-            padding: 6px 10px;
-            font-size: 11px;
-        }
-        
         .btn-outline-danger {
             color: var(--danger);
             border: 1px solid var(--danger);
@@ -776,17 +782,6 @@
         .btn-outline-success:hover {
             background-color: var(--success);
             color: white;
-        }
-        
-        .btn-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            font-size: 14px;
         }
         
         .form-check-inline {
@@ -883,16 +878,15 @@
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255, 255, 255, 0.3);
             overflow: hidden;
             margin-bottom: 16px;
-            animation: scaleIn 0.3s ease-in-out;
         }
         
         .household-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.05), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
         }
         
         .household-header {
@@ -905,53 +899,6 @@
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .household-body {
-            padding: 14px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-            opacity: 0;
-        }
-        
-        .household-body.expanded {
-            max-height: 1000px;
-            opacity: 1;
-            transition: max-height 0.5s ease-in, opacity 0.3s ease-in;
-        }
-        
-        .member-item {
-            padding: 12px;
-            border-radius: 12px;
-            background-color: var(--extra-light-gray);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .member-item:hover {
-            background-color: var(--light-gray);
-            transform: translateX(4px);
-        }
-        
-        .member-info {
-            flex: 1;
-        }
-        
-        .member-name {
-            font-weight: 500;
-            font-size: 13px;
-            margin-bottom: 2px;
-        }
-        
-        .member-details {
-            font-size: 11px;
-            color: var(--gray);
         }
         
         .search-box {
@@ -1227,25 +1174,6 @@
             gap: 4px;
         }
         
-        .collapse-icon {
-            transition: transform 0.3s ease;
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.8);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-        
-        .collapse-icon:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-        
-        .collapse-icon.rotated {
-            transform: rotate(180deg);
-        }
-        
         .filter-dropdown {
             position: relative;
             display: inline-block;
@@ -1297,484 +1225,248 @@
             margin-left: 8px;
         }
         
-        .add-member-section {
-            background: rgba(79, 70, 229, 0.05);
-            border: 1px dashed var(--primary);
+        .household-detail-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .household-detail-body {
+            padding: 20px;
+        }
+        
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        
+        .member-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 16px;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+        
+        .member-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+        }
+        
+        .member-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .member-card-body {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .member-card-footer {
             margin-top: 12px;
-            transition: all 0.3s ease;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
         }
         
-        .add-member-section:hover {
-            background: rgba(79, 70, 229, 0.1);
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .add-member-btn {
-            width: 100%;
-            justify-content: center;
-            background: transparent;
-            border: 1px solid var(--primary);
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        
+        .skeleton-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .skeleton-text {
+            height: 16px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .skeleton-text:last-child {
+            width: 60%;
+        }
+        
+        .seventeen-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .seventeen-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #f59e0b, #d97706);
+        }
+        
+        .seventeen-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+        }
+        
+        .seventeen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .seventeen-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .seventeen-title i {
+            margin-right: 8px;
+            color: #f59e0b;
+        }
+        
+        .seventeen-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+        
+        .seventeen-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .seventeen-age {
+            display: flex;
+            align-items: center;
+        }
+        
+        .seventeen-age i {
+            margin-right: 4px;
+            color: var(--info);
+        }
+        
+        .seventeen-dob {
+            display: flex;
+            align-items: center;
+        }
+        
+        .seventeen-dob i {
+            margin-right: 4px;
+            color: var(--success);
+        }
+        
+        .seventeen-gender {
+            display: flex;
+            align-items: center;
+        }
+        
+        .seventeen-gender i {
+            margin-right: 4px;
+        }
+        
+        .seventeen-gender.male i {
+            color: #0ea5e9;
+        }
+        
+        .seventeen-gender.female i {
+            color: #ec4899;
+        }
+        
+        .seventeen-household {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .seventeen-household i {
+            margin-right: 4px;
             color: var(--primary);
         }
         
-        .add-member-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .add-member-form {
-            display: none;
+        .seventeen-actions {
             margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
-        }
-        
-        .add-member-form.active {
-            display: block;
-        }
-        
-        .action-menu {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .action-menu-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 8px;
-            overflow: hidden;
-            right: 0;
-            top: 100%;
-            margin-top: 4px;
-        }
-        
-        .action-menu-content a {
-            color: var(--dark);
-            padding: 10px 14px;
-            text-decoration: none;
-            display: block;
-            font-size: 13px;
-            transition: background-color 0.2s;
             display: flex;
-            align-items: center;
-        }
-        
-        .action-menu-content a i {
-            margin-right: 8px;
-            font-size: 14px;
-        }
-        
-        .action-menu-content a:hover {
-            background-color: var(--extra-light-gray);
-        }
-        
-        .action-menu.active .action-menu-content {
-            display: block;
-        }
-        
-        .action-menu-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .action-menu-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        .household-actions {
-            display: flex;
+            justify-content: flex-end;
             gap: 8px;
-            align-items: center;
-        }
-        
-        .member-badge {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 4px 8px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-        
-        .household-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .member-row {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            transition: all 0.2s ease;
-            background: var(--extra-light-gray);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .member-row::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 3px;
-            background: var(--primary);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
-        
-        .member-row:hover::before {
-            transform: scaleY(1);
-        }
-        
-        .member-row:hover {
-            background: var(--light-gray);
-            transform: translateX(4px);
-        }
-        
-        .member-row-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2px;
-        }
-        
-        .member-row-details {
-            font-size: 11px;
-            color: var(--gray);
-        }
-        
-        .member-row-contact {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 4px;
-        }
-        
-        .member-row-contact span {
-            font-size: 10px;
-            color: var(--gray);
-            display: flex;
-            align-items: center;
-        }
-        
-        .member-row-contact i {
-            margin-right: 4px;
-            font-size: 11px;
-        }
-        
-        .member-row-actions {
-            display: flex;
-            gap: 4px;
-        }
-        
-        .member-row-actions .btn-icon {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--gray);
-            transition: all 0.2s ease;
-        }
-        
-        .member-row-actions .btn-icon:hover {
-            background: var(--light-gray);
-            transform: scale(1.1);
-        }
-        
-        .member-row-actions .btn-icon.btn-warning:hover {
-            background: var(--warning);
-            color: white;
-            border-color: var(--warning);
-        }
-        
-        .member-row-actions .btn-icon.btn-danger:hover {
-            background: var(--danger);
-            color: white;
-            border-color: var(--danger);
-        }
-        
-        /* Enhanced expansion/collapse animation */
-        .expand-indicator {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .expand-indicator::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease, height 0.3s ease;
-        }
-        
-        .expand-indicator:hover::before {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .expand-indicator:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-        
-        .expand-indicator i {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .expand-indicator.rotated i {
-            transform: rotate(180deg);
-        }
-        
-        /* Member count animation */
-        .member-count-badge {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 4px 8px;
-            font-size: 11px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .member-count-badge:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-        }
-        
-        /* Staggered animation for member rows */
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .member-row {
-            animation: slideInUp 0.4s ease-out forwards;
-            opacity: 0;
-        }
-        
-        .member-row:nth-child(1) { animation-delay: 0.1s; }
-        .member-row:nth-child(2) { animation-delay: 0.2s; }
-        .member-row:nth-child(3) { animation-delay: 0.3s; }
-        .member-row:nth-child(4) { animation-delay: 0.4s; }
-        .member-row:nth-child(5) { animation-delay: 0.5s; }
-        .member-row:nth-child(6) { animation-delay: 0.6s; }
-        .member-row:nth-child(7) { animation-delay: 0.7s; }
-        .member-row:nth-child(8) { animation-delay: 0.8s; }
-        .member-row:nth-child(9) { animation-delay: 0.9s; }
-        .member-row:nth-child(10) { animation-delay: 1.0s; }
-        
-        /* Hover effect for household header */
-        .household-header {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Gradient background for household body */
-        .household-body {
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
-            border-radius: 0 0 16px 16px;
-        }
-        
-        /* Enhanced visual feedback for expansion */
-        .household-card.expanding .household-body {
-            animation: expandIn 0.5s ease-out forwards;
-        }
-        
-        @keyframes expandIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Floating action for add member button */
-        .add-member-btn {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .add-member-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-        }
-        
-        .add-member-btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        /* Member row hover effect */
-        .member-row {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .member-row::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .member-row:hover::after {
-            left: 100%;
-        }
-        
-        /* Action button hover effect */
-        .member-row-actions .btn-icon {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .member-row-actions .btn-icon::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.1);
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease, height 0.3s ease;
-        }
-        
-        .member-row-actions .btn-icon:hover::before {
-            width: 100%;
-            height: 100%;
-        }
-        
-        /* Enhanced expand indicator */
-        .expand-indicator {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-        
-        .expand-indicator i {
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        .expand-indicator.rotated i {
-            transform: rotate(180deg);
-        }
-        
-        /* Member count badge animation */
-        .member-count-badge {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Household header hover effect */
-        .household-header {
-            transition: all 0.3s ease;
-        }
-        
-        .household-header:hover {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary) 100%);
-        }
-        
-        /* Smooth transition for household body */
-        .household-body {
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-        }
-        
-        /* Enhanced visual feedback */
-        .household-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .household-card:hover {
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Loading animation for member rows */
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
-            100% {
-                background-position: 200% 0;
-            }
-        }
-        
-        .member-row.loading {
-            background: linear-gradient(90deg, var(--extra-light-gray) 25%, var(--light-gray) 50%, var(--extra-light-gray) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        
-        /* Add Member Button Style */
-        .btn-add-member {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        
-        .btn-add-member:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .btn-add-member i {
-            margin-right: 6px;
-            font-size: 14px;
         }
     </style>
 </head>
@@ -1783,7 +1475,7 @@
     <div class="container mx-auto px-4 pt-6">
         <div class="header-gradient">
             <h1 class="text-2xl font-bold mb-1">BLO Census Register</h1>
-            <p class="text-indigo-200 text-sm font-light">Developed by : Imran Gani Mugloo (9149690096)</p>
+            <p class="text-indigo-200 text-sm font-light">By : Imran Gani Mugloo (9149690096)</p>
         </div>
     </div>
 
@@ -1975,32 +1667,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="member-aadhar" class="form-label">Aadhar Number</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                                <input type="text" class="form-control" id="member-aadhar" placeholder="Enter 12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}">
-                            </div>
-                            <div class="invalid-feedback" id="member-aadhar-feedback">
-                                Please enter a valid 12-digit Aadhar number.
-                            </div>
-                            <div class="valid-feedback" id="member-aadhar-valid-feedback">
-                                Looks good!
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="member-phone" class="form-label">Phone Number</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                                <input type="text" class="form-control" id="member-phone" placeholder="Enter 10-digit phone number" maxlength="10" pattern="[0-9]{10}">
-                            </div>
-                            <div class="invalid-feedback" id="member-phone-feedback">
-                                Please enter a valid 10-digit phone number.
-                            </div>
-                            <div class="valid-feedback" id="member-phone-valid-feedback">
-                                Looks good!
-                            </div>
-                        </div>
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary py-3">Add Member</button>
                             <button type="button" class="btn btn-secondary py-3" id="finish-household">Finish Household</button>
@@ -2027,24 +1693,10 @@
                         All Households
                     </h5>
                     
-                    <!-- Search and Filter Box -->
-                    <div class="d-flex gap-2 mb-3">
-                        <div class="search-box flex-grow-1">
-                            <i class="bi bi-search"></i>
-                            <input type="text" class="form-control search-input" id="search-households" placeholder="Search by house number or name...">
-                        </div>
-                        <div class="filter-dropdown" id="filter-dropdown">
-                            <div class="filter-btn" id="filter-btn">
-                                <span id="filter-text">Sort by: House Number</span>
-                                <i class="bi bi-chevron-down"></i>
-                            </div>
-                            <div class="filter-dropdown-content">
-                                <a href="#" data-sort="houseNumber">Sort by House Number</a>
-                                <a href="#" data-sort="name">Sort by HOF Name</a>
-                                <a href="#" data-sort="members">Sort by Member Count</a>
-                                <a href="#" data-sort="date">Sort by Date Added</a>
-                            </div>
-                        </div>
+                    <!-- Search Box -->
+                    <div class="search-box">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="form-control search-input" id="search-households" placeholder="Search by house number or name...">
                     </div>
                     
                     <!-- Households List -->
@@ -2053,6 +1705,46 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- 17-Year-Olds View -->
+        <div id="seventeen-view" class="view">
+            <div class="card mb-4">
+                <div class="p-4">
+                    <h5 class="section-title">
+                        <i class="bi bi-people-fill"></i>
+                        17-Year-Olds
+                    </h5>
+                    
+                    <!-- Search Box -->
+                    <div class="search-box">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="form-control search-input" id="search-seventeen" placeholder="Search by name or house number...">
+                    </div>
+                    
+                    <!-- Filter Options -->
+                    <div class="d-flex gap-2 mb-3">
+                        <select class="form-control" id="filter-seventeen-gender">
+                            <option value="">All Genders</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        <button class="btn btn-primary" id="refresh-seventeen">
+                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                        </button>
+                    </div>
+                    
+                    <!-- 17-Year-Olds List -->
+                    <div id="seventeen-list">
+                        <!-- 17-year-olds will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Household Detail View -->
+        <div id="household-detail-view" class="view">
+            <!-- Content will be dynamically generated -->
         </div>
 
         <!-- Reports View -->
@@ -2077,7 +1769,7 @@
                     
                     <div class="median-tip">
                         <i class="bi bi-info-circle-fill"></i>
-                        <strong>Tip:</strong> Files will be saved to your device's Downloads folder.
+                        <strong>Tip:</strong>Files will be saved to your device's Downloads folder.
                     </div>
                 </div>
             </div>
@@ -2136,8 +1828,8 @@
                         <i class="bi bi-info-circle-fill"></i>
                         About
                     </h5>
-                    <p class="mb-2 text-gray-700">BLO Register App v2.5.1</p>
-                    <p class="mb-0 text-gray-500 font-light">Designed by : Imran Gani Mugloo (BLO 114 Senzi, 42 Kokernag ST).</p>
+                    <p class="mb-2 text-gray-700">Population Census Register App v2 5.1</p>
+                    <p class="mb-0 text-gray-500 font-light">Designed By : Imran Gani Mugloo BLO 114-Senzi (42-Kokernag ST).</p>
                 </div>
             </div>
         </div>
@@ -2158,6 +1850,10 @@
                 <i class="bi bi-building"></i>
                 <span>Households</span>
             </a>
+            <a class="nav-tab" href="#" data-view="seventeen-view" title="17-Year-Olds">
+                <i class="bi bi-people-fill"></i>
+                <span>17-Year-Olds</span>
+            </a>
             <a class="nav-tab" href="#" data-view="reports-view" title="Reports">
                 <i class="bi bi-file-earmark-text-fill"></i>
                 <span>Reports</span>
@@ -2172,6 +1868,11 @@
     <!-- Floating Action Button -->
     <button class="fab" id="fab-add-household" title="Add Household">
         <i class="bi bi-plus-lg fs-4"></i>
+    </button>
+
+    <!-- Add Member Button (shown only on household detail view) -->
+    <button class="fab-add-member" id="add-member-btn" title="Add Member">
+        <i class="bi bi-person-plus fs-4"></i>
     </button>
 
     <!-- Hidden file input for restore -->
@@ -2302,32 +2003,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="edit-member-aadhar" class="form-label">Aadhar Number</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                            <input type="text" class="form-control" id="edit-member-aadhar" placeholder="Enter 12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}">
-                        </div>
-                        <div class="invalid-feedback" id="edit-member-aadhar-feedback">
-                            Please enter a valid 12-digit Aadhar number.
-                        </div>
-                        <div class="valid-feedback" id="edit-member-aadhar-valid-feedback">
-                            Looks good!
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit-member-phone" class="form-label">Phone Number</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                            <input type="text" class="form-control" id="edit-member-phone" placeholder="Enter 10-digit phone number" maxlength="10" pattern="[0-9]{10}">
-                        </div>
-                        <div class="invalid-feedback" id="edit-member-phone-feedback">
-                            Please enter a valid 10-digit phone number.
-                        </div>
-                        <div class="valid-feedback" id="edit-member-phone-valid-feedback">
-                            Looks good!
-                        </div>
-                    </div>
                 </form>
             </div>
             <div class="edit-modal-footer">
@@ -2344,15 +2019,6 @@
             '40-49', '50-59', '60-69', '70-79', '80-84', '85+'
         ];
         
-        // Initialize age groups data structure
-        function initializeAgeGroups() {
-            const ageGroups = {};
-            AGE_GROUPS.forEach(group => {
-                ageGroups[group] = { male: 0, female: 0 };
-            });
-            return ageGroups;
-        }
-        
         // App state management
         const AppState = {
             data: null,
@@ -2361,8 +2027,9 @@
                 totalPopulation: 0,
                 totalMale: 0,
                 totalFemale: 0,
-                ageGroups: initializeAgeGroups()
+                ageGroups: {}
             },
+            currentHouseholdId: null,
             
             // Initialize app data
             init() {
@@ -2382,8 +2049,19 @@
                     this.save();
                 }
                 
+                // Initialize age groups
+                this.initializeAgeGroups();
+                
                 // Calculate statistics
                 this.updateStatistics();
+            },
+            
+            // Initialize age groups data structure
+            initializeAgeGroups() {
+                this.statistics.ageGroups = {};
+                AGE_GROUPS.forEach(group => {
+                    this.statistics.ageGroups[group] = { male: 0, female: 0 };
+                });
             },
             
             // Save data to localStorage
@@ -2399,8 +2077,11 @@
                     totalPopulation: this.data.members.length,
                     totalMale: 0,
                     totalFemale: 0,
-                    ageGroups: initializeAgeGroups()
+                    ageGroups: {}
                 };
+                
+                // Reinitialize age groups
+                this.initializeAgeGroups();
                 
                 // Calculate gender distribution
                 this.data.members.forEach(member => {
@@ -2439,7 +2120,7 @@
             // Get age group based on age
             getAgeGroup(age) {
                 if (age <= 16) return '0-16';
-                if (age >= 17 && age <= 17) return '17-17';
+                if (age === 17) return '17-17';
                 if (age >= 18 && age <= 19) return '18-19';
                 if (age >= 20 && age <= 29) return '20-29';
                 if (age >= 30 && age <= 39) return '30-39';
@@ -2556,8 +2237,6 @@
                     name: memberData.name,
                     dob: memberData.dob,
                     gender: memberData.gender,
-                    aadhar: memberData.aadhar || '',
-                    phone: memberData.phone || '',
                     isHead: false,
                     dateAdded: new Date().toISOString()
                 };
@@ -2607,8 +2286,6 @@
                 member.name = memberData.name;
                 member.dob = memberData.dob;
                 member.gender = memberData.gender;
-                member.aadhar = memberData.aadhar || '';
-                member.phone = memberData.phone || '';
                 
                 // If this is the HOF, also update the household name
                 if (member.isHead) {
@@ -2668,6 +2345,26 @@
             // Get members by household ID
             getMembersByHousehold(householdId) {
                 return this.data.members.filter(m => m.householdId === householdId);
+            },
+            
+            // Get 17-year-olds
+            getSeventeenYearOlds() {
+                const seventeenYearOlds = [];
+                
+                this.data.members.forEach(member => {
+                    if (member.dob) {
+                        const age = this.calculateAge(member.dob);
+                        if (age === 17) {
+                            const household = this.getHousehold(member.householdId);
+                            seventeenYearOlds.push({
+                                ...member,
+                                household: household
+                            });
+                        }
+                    }
+                });
+                
+                return seventeenYearOlds;
             }
         };
         
@@ -2700,6 +2397,9 @@
                         // Update active nav
                         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                         tab.classList.add('active');
+                        
+                        // Hide add member button
+                        document.getElementById('add-member-btn').classList.remove('visible');
                     });
                 });
                 
@@ -2708,6 +2408,9 @@
                     this.showView('add-household-view');
                     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                     document.querySelector('[data-view="add-household-view"]').classList.add('active');
+                    
+                    // Hide add member button
+                    document.getElementById('add-member-btn').classList.remove('visible');
                 });
                 
                 // HOF Form submission
@@ -2731,16 +2434,6 @@
                     AppState.validatePhone(e.target);
                 });
                 
-                // Member Aadhar validation
-                document.getElementById('member-aadhar').addEventListener('input', (e) => {
-                    AppState.validateAadhar(e.target);
-                });
-                
-                // Member Phone validation
-                document.getElementById('member-phone').addEventListener('input', (e) => {
-                    AppState.validatePhone(e.target);
-                });
-                
                 // Edit HOF Aadhar validation
                 document.getElementById('edit-hof-aadhar').addEventListener('input', (e) => {
                     AppState.validateAadhar(e.target);
@@ -2748,16 +2441,6 @@
                 
                 // Edit HOF Phone validation
                 document.getElementById('edit-hof-phone').addEventListener('input', (e) => {
-                    AppState.validatePhone(e.target);
-                });
-                
-                // Edit Member Aadhar validation
-                document.getElementById('edit-member-aadhar').addEventListener('input', (e) => {
-                    AppState.validateAadhar(e.target);
-                });
-                
-                // Edit Member Phone validation
-                document.getElementById('edit-member-phone').addEventListener('input', (e) => {
                     AppState.validatePhone(e.target);
                 });
                 
@@ -2818,24 +2501,17 @@
                     this.filterHouseholds();
                 });
                 
-                // Filter dropdown functionality
-                document.getElementById('filter-btn').addEventListener('click', () => {
-                    const dropdown = document.getElementById('filter-dropdown');
-                    dropdown.classList.toggle('active');
+                // 17-year-olds view functionality
+                document.getElementById('search-seventeen').addEventListener('input', () => {
+                    this.filterSeventeenYearOlds();
                 });
                 
-                // Filter options
-                document.querySelectorAll('.filter-dropdown-content a').forEach(option => {
-                    option.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const sortBy = option.getAttribute('data-sort');
-                        const filterText = option.textContent;
-                        
-                        document.getElementById('filter-text').textContent = `Sort by: ${filterText.replace('Sort by: ', '')}`;
-                        document.getElementById('filter-dropdown').classList.remove('active');
-                        
-                        this.sortHouseholds(sortBy);
-                    });
+                document.getElementById('filter-seventeen-gender').addEventListener('change', () => {
+                    this.filterSeventeenYearOlds();
+                });
+                
+                document.getElementById('refresh-seventeen').addEventListener('click', () => {
+                    this.displaySeventeenYearOlds();
                 });
                 
                 // Edit household modal functionality
@@ -2861,12 +2537,9 @@
                     this.closeDownloadModal();
                 });
                 
-                // Close dropdown when clicking outside
-                document.addEventListener('click', (e) => {
-                    const dropdown = document.getElementById('filter-dropdown');
-                    if (!dropdown.contains(e.target)) {
-                        dropdown.classList.remove('active');
-                    }
+                // Add member button
+                document.getElementById('add-member-btn').addEventListener('click', () => {
+                    this.handleAddMemberToHousehold();
                 });
             },
             
@@ -2892,6 +2565,12 @@
                         break;
                     case 'households-view':
                         this.displayHouseholds();
+                        break;
+                    case 'seventeen-view':
+                        this.displaySeventeenYearOlds();
+                        break;
+                    case 'household-detail-view':
+                        // This will be handled separately
                         break;
                 }
             },
@@ -2998,35 +2677,17 @@
                 const name = document.getElementById('member-name').value;
                 const dob = document.getElementById('member-dob').value;
                 const gender = document.querySelector('input[name="member-gender"]:checked').value;
-                const aadhar = document.getElementById('member-aadhar').value.trim();
-                const phone = document.getElementById('member-phone').value.trim();
-                
-                // Validate Aadhar and phone if provided
-                const aadharValid = AppState.validateAadhar(document.getElementById('member-aadhar'));
-                const phoneValid = AppState.validatePhone(document.getElementById('member-phone'));
-                
-                if (!aadharValid || !phoneValid) {
-                    this.showToast('Please fix validation errors before submitting.', 'error');
-                    return;
-                }
                 
                 // Add member
                 AppState.addMember({
                     householdId: householdId,
                     name: name,
                     dob: dob,
-                    gender: gender,
-                    aadhar: aadhar,
-                    phone: phone
+                    gender: gender
                 });
                 
                 // Reset form
                 document.getElementById('member-form').reset();
-                
-                // Clear validation states
-                document.querySelectorAll('#member-form .form-control').forEach(input => {
-                    input.classList.remove('is-valid', 'is-invalid');
-                });
                 
                 // Update members list
                 this.updateMembersList(householdId);
@@ -3063,9 +2724,9 @@
                         memberInfo += ' <small class="text-muted">(No DOB)</small>';
                     }
                     
-                    // Show contact info if available
+                    // Show contact info if available (only for HOF)
                     let contactInfo = '';
-                    if (member.aadhar || member.phone) {
+                    if (member.isHead && (member.aadhar || member.phone)) {
                         contactInfo = '<div class="member-contact-info">';
                         if (member.aadhar) {
                             contactInfo += `<span><i class="bi bi-person-badge"></i> ${member.aadhar}</span>`;
@@ -3130,6 +2791,463 @@
                 this.showToast('Household completed successfully!', 'success');
             },
             
+            // Display households
+            displayHouseholds() {
+                // Get households list container
+                const householdsList = document.getElementById('households-list');
+                householdsList.innerHTML = '';
+                
+                // Check if there are any households
+                if (AppState.data.households.length === 0) {
+                    householdsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="bi bi-house-slash"></i>
+                            <h5>No households added yet</h5>
+                            <p>Start by adding your first household using the + button.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Sort households by house number (default)
+                const sortedHouseholds = [...AppState.data.households].sort((a, b) => {
+                    // Try to parse as numbers first, if fails, compare as strings
+                    const aNum = parseInt(a.houseNumber);
+                    const bNum = parseInt(b.houseNumber);
+                    
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return aNum - bNum;
+                    }
+                    
+                    return a.houseNumber.localeCompare(b.houseNumber);
+                });
+                
+                // Display each household
+                sortedHouseholds.forEach(household => {
+                    // Get members for this household
+                    const members = AppState.getMembersByHousehold(household.id);
+                    
+                    // Create household card
+                    const householdCard = document.createElement('div');
+                    householdCard.className = 'household-card';
+                    householdCard.setAttribute('data-house-number', household.houseNumber.toLowerCase());
+                    householdCard.setAttribute('data-hof-name', household.headOfFamily.toLowerCase());
+                    householdCard.setAttribute('data-member-count', members.length);
+                    
+                    // Create household header
+                    const householdHeader = document.createElement('div');
+                    householdHeader.className = 'household-header';
+                    householdHeader.innerHTML = `
+                        <div>
+                            <i class="bi bi-house-door-fill me-2"></i>
+                            House #${household.houseNumber}
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-white bg-opacity-20 me-2">${members.length} members</span>
+                            <button class="btn btn-sm btn-outline-primary bg-transparent border-white text-white me-2" onclick="UIController.editHousehold('${household.id}')" title="Edit Household">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger bg-transparent border-white text-white" onclick="UIController.removeItem('${household.id}', 'household')" title="Remove Household">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Create household body
+                    const householdBody = document.createElement('div');
+                    householdBody.className = 'p-4';
+                    
+                    // Add HOF info
+                    const hof = members.find(member => member.isHead);
+                    if (hof) {
+                        const hofAge = hof.dob ? AppState.calculateAge(hof.dob) : '';
+                        const hofAgeGroup = hof.dob ? AppState.getAgeGroup(hofAge) : '';
+                        const hofGenderIcon = hof.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
+                        
+                        const hofElement = document.createElement('div');
+                        hofElement.className = 'd-flex justify-content-between align-items-center mb-2';
+                        
+                        // Build contact info (only for HOF)
+                        let contactInfo = '';
+                        if (hof.aadhar || hof.phone) {
+                            contactInfo = '<div class="member-contact-info">';
+                            if (hof.aadhar) {
+                                contactInfo += `<span><i class="bi bi-person-badge"></i> ${hof.aadhar}</span>`;
+                            }
+                            if (hof.phone) {
+                                contactInfo += `<span><i class="bi bi-telephone"></i> ${hof.phone}</span>`;
+                            }
+                            contactInfo += '</div>';
+                        }
+                        
+                        hofElement.innerHTML = `
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi ${hofGenderIcon} me-2"></i>
+                                    <div>
+                                        <div class="font-medium">${hof.name}</div>
+                                        <div class="text-sm text-gray-500">
+                                            ${hof.dob ? `${hofAge} years (${hofAgeGroup})` : 'No DOB'}
+                                        </div>
+                                    </div>
+                                </div>
+                                ${contactInfo}
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="UIController.viewHousehold('${household.id}')">
+                                View Details <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        `;
+                        householdBody.appendChild(hofElement);
+                    }
+                    
+                    // Add address if available
+                    if (household.address) {
+                        const addressElement = document.createElement('div');
+                        addressElement.className = 'text-sm text-gray-500';
+                        addressElement.innerHTML = `
+                            <i class="bi bi-geo-alt me-1"></i>
+                            ${household.address}
+                        `;
+                        householdBody.appendChild(addressElement);
+                    }
+                    
+                    // Add click event to header for navigation
+                    householdHeader.addEventListener('click', () => {
+                        this.viewHousehold(household.id);
+                    });
+                    
+                    // Assemble household card
+                    householdCard.appendChild(householdHeader);
+                    householdCard.appendChild(householdBody);
+                    
+                    // Add to households list
+                    householdsList.appendChild(householdCard);
+                });
+            },
+            
+            // Display 17-year-olds
+            displaySeventeenYearOlds() {
+                // Get 17-year-olds list container
+                const seventeenList = document.getElementById('seventeen-list');
+                seventeenList.innerHTML = '';
+                
+                // Get 17-year-olds
+                const seventeenYearOlds = AppState.getSeventeenYearOlds();
+                
+                // Check if there are any 17-year-olds
+                if (seventeenYearOlds.length === 0) {
+                    seventeenList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="bi bi-people"></i>
+                            <h5>No 17-year-olds found</h5>
+                            <p>Add more households or check back later for updates.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Sort 17-year-olds by name
+                const sortedSeventeenYearOlds = [...seventeenYearOlds].sort((a, b) => {
+                    return a.name.localeCompare(b.name);
+                });
+                
+                // Display each 17-year-old
+                sortedSeventeenYearOlds.forEach(member => {
+                    const seventeenCard = document.createElement('div');
+                    seventeenCard.className = 'seventeen-card';
+                    seventeenCard.setAttribute('data-name', member.name.toLowerCase());
+                    seventeenCard.setAttribute('data-house-number', member.household.houseNumber.toLowerCase());
+                    seventeenCard.setAttribute('data-gender', member.gender);
+                    
+                    const genderIcon = member.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
+                    const dobFormatted = new Date(member.dob).toLocaleDateString();
+                    
+                    seventeenCard.innerHTML = `
+                        <div class="seventeen-header">
+                            <div class="seventeen-title">
+                                <i class="bi ${genderIcon}"></i>
+                                ${member.name}
+                            </div>
+                            <div class="seventeen-badge">17 Years Old</div>
+                        </div>
+                        <div class="seventeen-info">
+                            <div class="seventeen-age">
+                                <i class="bi bi-calendar3"></i>
+                                ${dobFormatted}
+                            </div>
+                            <div class="seventeen-gender ${member.gender}">
+                                <i class="bi ${genderIcon}"></i>
+                                ${member.gender.charAt(0).toUpperCase() + member.gender.slice(1)}
+                            </div>
+                        </div>
+                        <div class="seventeen-household">
+                            <i class="bi bi-house-door"></i>
+                            House #${member.household.houseNumber}
+                        </div>
+                        <div class="seventeen-actions">
+                            <button class="btn btn-sm btn-outline-primary" onclick="UIController.viewHousehold('${member.householdId}')" title="View Household">
+                                <i class="bi bi-house-door"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning" onclick="UIController.editMember('${member.id}')" title="Edit Member">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    seventeenList.appendChild(seventeenCard);
+                });
+                
+                // Update count in the section title
+                const sectionTitle = document.querySelector('#seventeen-view .section-title');
+                sectionTitle.innerHTML = `
+                    <i class="bi bi-people-fill"></i>
+                    17-Year-Olds <span class="badge badge-seventeen ms-2">${seventeenYearOlds.length}</span>
+                `;
+            },
+            
+            // Filter 17-year-olds
+            filterSeventeenYearOlds() {
+                const searchTerm = document.getElementById('search-seventeen').value.toLowerCase();
+                const genderFilter = document.getElementById('filter-seventeen-gender').value;
+                const seventeenCards = document.querySelectorAll('.seventeen-card');
+                
+                seventeenCards.forEach(card => {
+                    const name = card.getAttribute('data-name');
+                    const houseNumber = card.getAttribute('data-house-number');
+                    const gender = card.getAttribute('data-gender');
+                    
+                    const matchesSearch = name.includes(searchTerm) || houseNumber.includes(searchTerm);
+                    const matchesGender = !genderFilter || gender === genderFilter;
+                    
+                    if (matchesSearch && matchesGender) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            },
+            
+            // View household details
+            viewHousehold(householdId) {
+                // Set current household ID
+                AppState.currentHouseholdId = householdId;
+                
+                // Get household data
+                const household = AppState.getHousehold(householdId);
+                if (!household) return;
+                
+                // Get members
+                const members = AppState.getMembersByHousehold(householdId);
+                
+                // Create household detail view
+                const detailView = document.getElementById('household-detail-view');
+                detailView.innerHTML = `
+                    <div class="household-detail-header">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-1">House #${household.houseNumber}</h2>
+                            <p class="text-indigo-200 text-sm font-light">${household.headOfFamily}</p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-white bg-opacity-20 me-2">${members.length} members</span>
+                            <button class="btn btn-sm btn-outline-primary bg-transparent border-white text-white me-2" onclick="UIController.editHousehold('${household.id}')" title="Edit Household">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger bg-transparent border-white text-white" onclick="UIController.removeItem('${household.id}', 'household')" title="Remove Household">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="household-detail-body">
+                        ${household.address ? `
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center text-gray-600">
+                                    <i class="bi bi-geo-alt me-2"></i>
+                                    <span>${household.address}</span>
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="mb-4">
+                            <h5 class="section-title">
+                                <i class="bi bi-people-fill"></i>
+                                Household Members
+                            </h5>
+                            <div class="member-grid" id="member-grid">
+                                <!-- Members will be added here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Show household detail view
+                this.showView('household-detail-view');
+                
+                // Update navigation
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                
+                // Show add member button
+                const addMemberBtn = document.getElementById('add-member-btn');
+                addMemberBtn.classList.add('visible');
+                addMemberBtn.setAttribute('data-household-id', householdId);
+                
+                // Populate member grid
+                this.populateMemberGrid(householdId);
+            },
+            
+            // Populate member grid
+            populateMemberGrid(householdId) {
+                const memberGrid = document.getElementById('member-grid');
+                memberGrid.innerHTML = '';
+                
+                // Get members for this household
+                const members = AppState.getMembersByHousehold(householdId);
+                
+                // Add each member to the grid
+                members.forEach(member => {
+                    const age = member.dob ? AppState.calculateAge(member.dob) : '';
+                    const ageGroup = member.dob ? AppState.getAgeGroup(age) : '';
+                    const genderIcon = member.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
+                    
+                    // Build contact info (only for HOF)
+                    let contactInfo = '';
+                    if (member.isHead && (member.aadhar || member.phone)) {
+                        contactInfo = '<div class="member-contact-info">';
+                        if (member.aadhar) {
+                            contactInfo += `<span><i class="bi bi-person-badge"></i> ${member.aadhar}</span>`;
+                        }
+                        if (member.phone) {
+                            contactInfo += `<span><i class="bi bi-telephone"></i> ${member.phone}</span>`;
+                        }
+                        contactInfo += '</div>';
+                    }
+                    
+                    const memberCard = document.createElement('div');
+                    memberCard.className = 'member-card';
+                    memberCard.innerHTML = `
+                        <div class="member-card-header">
+                            <div class="d-flex align-items-center">
+                                <i class="bi ${genderIcon} me-2"></i>
+                                <div>
+                                    <div class="font-medium">${member.name}</div>
+                                    ${member.isHead ? '<span class="badge badge-primary ms-2">Head</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-card-body">
+                            <div class="text-gray-500">
+                                ${member.dob ? `${age} years (${ageGroup})` : 'No DOB'}
+                            </div>
+                            ${contactInfo}
+                        </div>
+                        <div class="member-card-footer">
+                            <button class="btn btn-sm btn-outline-warning" onclick="UIController.editMember('${member.id}')" title="Edit Member">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="UIController.removeItem('${member.id}', 'member')" title="Remove Member">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    memberGrid.appendChild(memberCard);
+                });
+            },
+            
+            // Handle add member to household (from detail view)
+            handleAddMemberToHousehold() {
+                const householdId = AppState.currentHouseholdId;
+                if (!householdId) return;
+                
+                // Get household data
+                const household = AppState.getHousehold(householdId);
+                if (!household) return;
+                
+                // Show add member modal with pre-filled household info
+                const modal = document.createElement('div');
+                modal.className = 'edit-modal active';
+                modal.innerHTML = `
+                    <div class="edit-modal-content">
+                        <h3 class="edit-modal-title">Add Member to Household #${household.houseNumber}</h3>
+                        <div class="edit-modal-body">
+                            <form id="quick-add-member-form">
+                                <div class="mb-3">
+                                    <label for="quick-member-name" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="quick-member-name" placeholder="Enter full name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="quick-member-dob" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="quick-member-dob" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Gender</label>
+                                    <div class="mt-1">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="quick-member-gender" id="quick-member-gender-male" value="male" required>
+                                            <label class="form-check-label" for="quick-member-gender-male">Male</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="quick-member-gender" id="quick-member-gender-female" value="female" required>
+                                            <label class="form-check-label" for="quick-member-gender-female">Female</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="edit-modal-footer">
+                            <button class="btn btn-secondary" id="cancel-quick-add">Cancel</button>
+                            <button class="btn btn-primary" id="save-quick-add">Add Member</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Setup event listeners for quick add
+                const quickAddForm = document.getElementById('quick-add-member-form');
+                const cancelBtn = document.getElementById('cancel-quick-add');
+                const saveBtn = document.getElementById('save-quick-add');
+                
+                // Cancel button
+                cancelBtn.addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                });
+                
+                // Save button
+                saveBtn.addEventListener('click', () => {
+                    const name = document.getElementById('quick-member-name').value;
+                    const dob = document.getElementById('quick-member-dob').value;
+                    const gender = document.querySelector('input[name="quick-member-gender"]:checked').value;
+                    
+                    // Add member
+                    AppState.addMember({
+                        householdId: householdId,
+                        name: name,
+                        dob: dob,
+                        gender: gender
+                    });
+                    
+                    // Remove modal
+                    document.body.removeChild(modal);
+                    
+                    // Refresh member grid
+                    this.populateMemberGrid(householdId);
+                    
+                    // Show success toast
+                    this.showToast('Member added successfully!', 'success');
+                });
+                
+                // Form submission
+                quickAddForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    saveBtn.click();
+                });
+                
+                // Focus on name input
+                setTimeout(() => {
+                    document.getElementById('quick-member-name').focus();
+                }, 100);
+            },
+            
             // Edit member
             editMember(memberId) {
                 // Get member
@@ -3140,8 +3258,6 @@
                 document.getElementById('edit-member-id').value = member.id;
                 document.getElementById('edit-member-name').value = member.name;
                 document.getElementById('edit-member-dob').value = member.dob;
-                document.getElementById('edit-member-aadhar').value = member.aadhar || '';
-                document.getElementById('edit-member-phone').value = member.phone || '';
                 
                 // Set gender
                 if (member.gender === 'male') {
@@ -3149,11 +3265,6 @@
                 } else {
                     document.getElementById('edit-member-gender-female').checked = true;
                 }
-                
-                // Clear validation states
-                document.querySelectorAll('#edit-member-form .form-control').forEach(input => {
-                    input.classList.remove('is-valid', 'is-invalid');
-                });
                 
                 // Show edit modal
                 document.getElementById('edit-member-modal').classList.add('active');
@@ -3170,25 +3281,12 @@
                 const name = document.getElementById('edit-member-name').value;
                 const dob = document.getElementById('edit-member-dob').value;
                 const gender = document.querySelector('input[name="edit-member-gender"]:checked').value;
-                const aadhar = document.getElementById('edit-member-aadhar').value.trim();
-                const phone = document.getElementById('edit-member-phone').value.trim();
-                
-                // Validate Aadhar and phone if provided
-                const aadharValid = AppState.validateAadhar(document.getElementById('edit-member-aadhar'));
-                const phoneValid = AppState.validatePhone(document.getElementById('edit-member-phone'));
-                
-                if (!aadharValid || !phoneValid) {
-                    this.showToast('Please fix validation errors before saving.', 'error');
-                    return;
-                }
                 
                 // Update member
                 const success = AppState.updateMember(memberId, {
                     name: name,
                     dob: dob,
-                    gender: gender,
-                    aadhar: aadhar,
-                    phone: phone
+                    gender: gender
                 });
                 
                 if (!success) {
@@ -3202,16 +3300,14 @@
                 // Update dashboard
                 this.updateDashboard();
                 
-                // Refresh households list if we're in that view
-                if (this.currentView === 'households-view') {
-                    this.displayHouseholds();
+                // Refresh member grid if we're in household detail view
+                if (this.currentView === 'household-detail-view' && AppState.currentHouseholdId) {
+                    this.populateMemberGrid(AppState.currentHouseholdId);
                 }
                 
-                // Update members list if we're in the add household view
-                if (this.currentView === 'add-household-view' && 
-                    !document.getElementById('add-members-section').classList.contains('d-none')) {
-                    const householdId = document.getElementById('current-household-id').value;
-                    this.updateMembersList(householdId);
+                // Refresh 17-year-olds view if we're in it
+                if (this.currentView === 'seventeen-view') {
+                    this.displaySeventeenYearOlds();
                 }
                 
                 // Show success toast
@@ -3307,7 +3403,19 @@
                 this.updateDashboard();
                 
                 // Refresh households list
-                this.displayHouseholds();
+                if (this.currentView === 'households-view') {
+                    this.displayHouseholds();
+                }
+                
+                // Refresh household detail view if we're in it
+                if (this.currentView === 'household-detail-view' && AppState.currentHouseholdId === householdId) {
+                    this.viewHousehold(householdId);
+                }
+                
+                // Refresh 17-year-olds view if we're in it
+                if (this.currentView === 'seventeen-view') {
+                    this.displaySeventeenYearOlds();
+                }
                 
                 // Show success toast
                 this.showToast('Household updated successfully!', 'success');
@@ -3380,332 +3488,33 @@
                 if (this.currentView === 'households-view') {
                     this.displayHouseholds();
                 }
+                
+                // Refresh 17-year-olds view if we're in it
+                if (this.currentView === 'seventeen-view') {
+                    this.displaySeventeenYearOlds();
+                }
+                
+                // Refresh household detail view if we're in it
+                if (this.currentView === 'household-detail-view' && AppState.currentHouseholdId) {
+                    this.viewHousehold(AppState.currentHouseholdId);
+                }
             },
             
-            // Add member to existing household
-            addMemberToExistingHousehold(householdId) {
-                // Create add member section if it doesn't exist
-                let addMemberSection = document.getElementById(`add-member-section-${householdId}`);
+            // Filter households based on search
+            filterHouseholds() {
+                const searchTerm = document.getElementById('search-households').value.toLowerCase();
+                const householdCards = document.querySelectorAll('.household-card');
                 
-                if (!addMemberSection) {
-                    // Get household body
-                    const householdBody = document.getElementById(`household-body-${householdId}`);
+                householdCards.forEach(card => {
+                    const houseNumber = card.getAttribute('data-house-number');
+                    const hofName = card.getAttribute('data-hof-name');
                     
-                    // Create add member section
-                    addMemberSection = document.createElement('div');
-                    addMemberSection.className = 'add-member-section';
-                    addMemberSection.id = `add-member-section-${householdId}`;
-                    
-                    addMemberSection.innerHTML = `
-                        <button class="btn add-member-btn" id="add-member-btn-${householdId}">
-                            <i class="bi bi-person-plus me-2"></i>Add New Member
-                        </button>
-                        <form class="add-member-form" id="add-member-form-${householdId}">
-                            <div class="mb-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="add-member-name-${householdId}" placeholder="Enter full name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Date of Birth</label>
-                                <input type="date" class="form-control" id="add-member-dob-${householdId}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Gender</label>
-                                <div class="mt-1">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="add-member-gender-${householdId}" id="add-member-gender-male-${householdId}" value="male" required>
-                                        <label class="form-check-label" for="add-member-gender-male-${householdId}">Male</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="add-member-gender-${householdId}" id="add-member-gender-female-${householdId}" value="female" required>
-                                        <label class="form-check-label" for="add-member-gender-female-${householdId}">Female</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Aadhar Number</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                                    <input type="text" class="form-control" id="add-member-aadhar-${householdId}" placeholder="Enter 12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}">
-                                </div>
-                                <div class="invalid-feedback" id="add-member-aadhar-feedback-${householdId}">
-                                    Please enter a valid 12-digit Aadhar number.
-                                </div>
-                                <div class="valid-feedback" id="add-member-aadhar-valid-feedback-${householdId}">
-                                    Looks good!
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Phone Number</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                                    <input type="text" class="form-control" id="add-member-phone-${householdId}" placeholder="Enter 10-digit phone number" maxlength="10" pattern="[0-9]{10}">
-                                </div>
-                                <div class="invalid-feedback" id="add-member-phone-feedback-${householdId}">
-                                    Please enter a valid 10-digit phone number.
-                                </div>
-                                <div class="valid-feedback" id="add-member-phone-valid-feedback-${householdId}">
-                                    Looks good!
-                                </div>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary py-2">Add Member</button>
-                                <button type="button" class="btn btn-secondary py-2" id="cancel-add-member-${householdId}">Cancel</button>
-                            </div>
-                        </form>
-                    `;
-                    
-                    // Add to household body
-                    householdBody.appendChild(addMemberSection);
-                    
-                    // Setup event listeners
-                    document.getElementById(`add-member-btn-${householdId}`).addEventListener('click', () => {
-                        const form = document.getElementById(`add-member-form-${householdId}`);
-                        form.classList.add('active');
-                        document.getElementById(`add-member-name-${householdId}`).focus();
-                    });
-                    
-                    document.getElementById(`add-member-form-${householdId}`).addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        this.handleAddMemberToExistingHousehold(householdId);
-                    });
-                    
-                    document.getElementById(`cancel-add-member-${householdId}`).addEventListener('click', () => {
-                        const form = document.getElementById(`add-member-form-${householdId}`);
-                        form.classList.remove('active');
-                        form.reset();
-                        
-                        // Clear validation states
-                        form.querySelectorAll('.form-control').forEach(input => {
-                            input.classList.remove('is-valid', 'is-invalid');
-                        });
-                    });
-                    
-                    // Aadhar validation
-                    document.getElementById(`add-member-aadhar-${householdId}`).addEventListener('input', (e) => {
-                        AppState.validateAadhar(e.target);
-                    });
-                    
-                    // Phone validation
-                    document.getElementById(`add-member-phone-${householdId}`).addEventListener('input', (e) => {
-                        AppState.validatePhone(e.target);
-                    });
-                } else {
-                    // If section already exists, just show the form
-                    const form = document.getElementById(`add-member-form-${householdId}`);
-                    form.classList.add('active');
-                    document.getElementById(`add-member-name-${householdId}`).focus();
-                }
-                
-                // Expand household body to show the add member form
-                const householdBody = document.getElementById(`household-body-${householdId}`);
-                householdBody.classList.add('expanded');
-                const expandIcon = document.getElementById(`expand-${householdId}`);
-                expandIcon.classList.add('rotated');
-            },
-            
-            // Handle add member to existing household
-            handleAddMemberToExistingHousehold(householdId) {
-                const name = document.getElementById(`add-member-name-${householdId}`).value;
-                const dob = document.getElementById(`add-member-dob-${householdId}`).value;
-                const gender = document.querySelector(`input[name="add-member-gender-${householdId}"]:checked`).value;
-                const aadhar = document.getElementById(`add-member-aadhar-${householdId}`).value.trim();
-                const phone = document.getElementById(`add-member-phone-${householdId}`).value.trim();
-                
-                // Validate Aadhar and phone if provided
-                const aadharValid = AppState.validateAadhar(document.getElementById(`add-member-aadhar-${householdId}`));
-                const phoneValid = AppState.validatePhone(document.getElementById(`add-member-phone-${householdId}`));
-                
-                if (!aadharValid || !phoneValid) {
-                    this.showToast('Please fix validation errors before submitting.', 'error');
-                    return;
-                }
-                
-                // Add member
-                AppState.addMember({
-                    householdId: householdId,
-                    name: name,
-                    dob: dob,
-                    gender: gender,
-                    aadhar: aadhar,
-                    phone: phone
-                });
-                
-                // Reset form
-                const form = document.getElementById(`add-member-form-${householdId}`);
-                form.reset();
-                form.classList.remove('active');
-                
-                // Clear validation states
-                form.querySelectorAll('.form-control').forEach(input => {
-                    input.classList.remove('is-valid', 'is-invalid');
-                });
-                
-                // Update household display
-                this.updateHouseholdDisplay(householdId);
-                
-                // Update dashboard
-                this.updateDashboard();
-                
-                // Show success toast
-                this.showToast('Family member added successfully!', 'success');
-            },
-            
-            // Update household display
-            updateHouseholdDisplay(householdId) {
-                // Get household
-                const household = AppState.getHousehold(householdId);
-                if (!household) return;
-                
-                // Get members for this household
-                const members = AppState.getMembersByHousehold(householdId);
-                
-                // Get household card
-                const householdCard = document.querySelector(`[data-household-id="${householdId}"]`);
-                if (!householdCard) return;
-                
-                // Update member count badge
-                const memberCountBadge = householdCard.querySelector('.member-count-badge');
-                if (memberCountBadge) {
-                    memberCountBadge.textContent = `${members.length} members`;
-                }
-                
-                // Update household body
-                const householdBody = document.getElementById(`household-body-${householdId}`);
-                if (!householdBody) return;
-                
-                // Remove existing member items (keep add member section if it exists)
-                const memberItems = householdBody.querySelectorAll('.member-row');
-                memberItems.forEach(item => item.remove());
-                
-                // Add HOF info
-                const hof = members.find(member => member.isHead);
-                if (hof) {
-                    const hofAge = hof.dob ? AppState.calculateAge(hof.dob) : '';
-                    const hofAgeGroup = hof.dob ? AppState.getAgeGroup(hofAge) : '';
-                    const hofGenderIcon = hof.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
-                    
-                    const hofElement = document.createElement('div');
-                    hofElement.className = 'member-row';
-                    
-                    // Build contact info
-                    let contactInfo = '';
-                    if (hof.aadhar || hof.phone) {
-                        contactInfo = '<div class="member-row-contact">';
-                        if (hof.aadhar) {
-                            contactInfo += `<span><i class="bi bi-person-badge"></i> ${hof.aadhar}</span>`;
-                        }
-                        if (hof.phone) {
-                            contactInfo += `<span><i class="bi bi-telephone"></i> ${hof.phone}</span>`;
-                        }
-                        contactInfo += '</div>';
-                    }
-                    
-                    hofElement.innerHTML = `
-                        <div class="member-info">
-                            <div class="member-row-header">
-                                <div>
-                                    <i class="bi ${hofGenderIcon} me-1"></i>
-                                    ${hof.name}
-                                    <span class="badge badge-primary ms-2">Head</span>
-                                </div>
-                                <div class="member-row-actions">
-                                    <button class="btn btn-icon btn-warning" onclick="UIController.editMember('${hof.id}')" title="Edit Member">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-icon btn-danger" onclick="UIController.removeItem('${hof.id}', 'member')" title="Remove Member">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="member-row-details">
-                                ${hof.dob ? `${hofAge} years (${hofAgeGroup})` : 'No DOB'}
-                            </div>
-                            ${contactInfo}
-                        </div>
-                    `;
-                    
-                    // Insert before add member section if it exists
-                    const addMemberSection = document.getElementById(`add-member-section-${householdId}`);
-                    if (addMemberSection) {
-                        householdBody.insertBefore(hofElement, addMemberSection);
+                    if (houseNumber.includes(searchTerm) || hofName.includes(searchTerm)) {
+                        card.style.display = 'block';
                     } else {
-                        householdBody.appendChild(hofElement);
-                    }
-                }
-                
-                // Add other members
-                const otherMembers = members.filter(member => !member.isHead);
-                otherMembers.forEach(member => {
-                    const age = member.dob ? AppState.calculateAge(member.dob) : '';
-                    const ageGroup = member.dob ? AppState.getAgeGroup(age) : '';
-                    const genderIcon = member.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
-                    
-                    // Build contact info
-                    let contactInfo = '';
-                    if (member.aadhar || member.phone) {
-                        contactInfo = '<div class="member-row-contact">';
-                        if (member.aadhar) {
-                            contactInfo += `<span><i class="bi bi-person-badge"></i> ${member.aadhar}</span>`;
-                        }
-                        if (member.phone) {
-                            contactInfo += `<span><i class="bi bi-telephone"></i> ${member.phone}</span>`;
-                        }
-                        contactInfo += '</div>';
-                    }
-                    
-                    const memberElement = document.createElement('div');
-                    memberElement.className = 'member-row';
-                    memberElement.innerHTML = `
-                        <div class="member-info">
-                            <div class="member-row-header">
-                                <div>
-                                    <i class="bi ${genderIcon} me-1"></i>
-                                    ${member.name}
-                                </div>
-                                <div class="member-row-actions">
-                                    <button class="btn btn-icon btn-warning" onclick="UIController.editMember('${member.id}')" title="Edit Member">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-icon btn-danger" onclick="UIController.removeItem('${member.id}', 'member')" title="Remove Member">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="member-row-details">
-                                ${member.dob ? `${age} years (${ageGroup})` : 'No DOB'}
-                            </div>
-                            ${contactInfo}
-                        </div>
-                    `;
-                    
-                    // Insert before add member section if it exists
-                    const addMemberSection = document.getElementById(`add-member-section-${householdId}`);
-                    if (addMemberSection) {
-                        householdBody.insertBefore(memberElement, addMemberSection);
-                    } else {
-                        householdBody.appendChild(memberElement);
+                        card.style.display = 'none';
                     }
                 });
-                
-                // Update address if available
-                let addressElement = householdBody.querySelector('.mt-3.text-sm.text-gray-500');
-                if (!addressElement && household.address) {
-                    addressElement = document.createElement('div');
-                    addressElement.className = 'mt-3 text-sm text-gray-500';
-                    addressElement.innerHTML = `
-                        <i class="bi bi-geo-alt me-1"></i>
-                        ${household.address}
-                    `;
-                    
-                    // Insert before add member section if it exists
-                    const addMemberSection = document.getElementById(`add-member-section-${householdId}`);
-                    if (addMemberSection) {
-                        householdBody.insertBefore(addressElement, addMemberSection);
-                    } else {
-                        householdBody.appendChild(addressElement);
-                    }
-                }
             },
             
             // Update dashboard
@@ -3887,283 +3696,6 @@
                 `;
                 
                 tableBody.appendChild(totalRow);
-            },
-            
-            // Display households
-            displayHouseholds() {
-                // Get households list container
-                const householdsList = document.getElementById('households-list');
-                householdsList.innerHTML = '';
-                
-                // Check if there are any households
-                if (AppState.data.households.length === 0) {
-                    householdsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="bi bi-house-slash"></i>
-                            <h5>No households added yet</h5>
-                            <p>Start by adding your first household using the + button.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Sort households by house number (default)
-                const sortedHouseholds = [...AppState.data.households].sort((a, b) => {
-                    // Try to parse as numbers first, if fails, compare as strings
-                    const aNum = parseInt(a.houseNumber);
-                    const bNum = parseInt(b.houseNumber);
-                    
-                    if (!isNaN(aNum) && !isNaN(bNum)) {
-                        return aNum - bNum;
-                    }
-                    
-                    return a.houseNumber.localeCompare(b.houseNumber);
-                });
-                
-                // Display each household
-                sortedHouseholds.forEach(household => {
-                    // Get members for this household
-                    const members = AppState.getMembersByHousehold(household.id);
-                    
-                    // Create household card
-                    const householdCard = document.createElement('div');
-                    householdCard.className = 'household-card';
-                    householdCard.setAttribute('data-house-number', household.houseNumber.toLowerCase());
-                    householdCard.setAttribute('data-hof-name', household.headOfFamily.toLowerCase());
-                    householdCard.setAttribute('data-member-count', members.length);
-                    householdCard.setAttribute('data-date', household.dateAdded);
-                    householdCard.setAttribute('data-household-id', household.id);
-                    
-                    // Create household header
-                    const householdHeader = document.createElement('div');
-                    householdHeader.className = 'household-header';
-                    householdHeader.innerHTML = `
-                        <div class="household-info">
-                            <i class="bi bi-house-door-fill me-2"></i>
-                            House #${household.houseNumber}
-                            <span class="member-count-badge">${members.length} members</span>
-                        </div>
-                        <div class="household-actions">
-                            <div class="expand-indicator" id="expand-${household.id}" onclick="UIController.toggleHousehold('${household.id}')">
-                                <i class="bi bi-chevron-down"></i>
-                            </div>
-                            <button class="btn-add-member" onclick="UIController.addMemberToExistingHousehold('${household.id}')">
-                                <i class="bi bi-person-plus me-1"></i>Add Member
-                            </button>
-                        </div>
-                    `;
-                    
-                    // Create household body
-                    const householdBody = document.createElement('div');
-                    householdBody.className = 'household-body';
-                    householdBody.id = `household-body-${household.id}`;
-                    
-                    // Add HOF info
-                    const hof = members.find(member => member.isHead);
-                    if (hof) {
-                        const hofAge = hof.dob ? AppState.calculateAge(hof.dob) : '';
-                        const hofAgeGroup = hof.dob ? AppState.getAgeGroup(hofAge) : '';
-                        const hofGenderIcon = hof.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
-                        
-                        const hofElement = document.createElement('div');
-                        hofElement.className = 'member-row';
-                        
-                        // Build contact info
-                        let contactInfo = '';
-                        if (hof.aadhar || hof.phone) {
-                            contactInfo = '<div class="member-row-contact">';
-                            if (hof.aadhar) {
-                                contactInfo += `<span><i class="bi bi-person-badge"></i> ${hof.aadhar}</span>`;
-                            }
-                            if (hof.phone) {
-                                contactInfo += `<span><i class="bi bi-telephone"></i> ${hof.phone}</span>`;
-                            }
-                            contactInfo += '</div>';
-                        }
-                        
-                        hofElement.innerHTML = `
-                            <div class="member-info">
-                                <div class="member-row-header">
-                                    <div>
-                                        <i class="bi ${hofGenderIcon} me-1"></i>
-                                        ${hof.name}
-                                        <span class="badge badge-primary ms-2">Head</span>
-                                    </div>
-                                    <div class="member-row-actions">
-                                        <button class="btn btn-icon btn-warning" onclick="UIController.editMember('${hof.id}')" title="Edit Member">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-icon btn-danger" onclick="UIController.removeItem('${hof.id}', 'member')" title="Remove Member">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="member-row-details">
-                                    ${hof.dob ? `${hofAge} years (${hofAgeGroup})` : 'No DOB'}
-                                </div>
-                                ${contactInfo}
-                            </div>
-                        `;
-                        householdBody.appendChild(hofElement);
-                    }
-                    
-                    // Add other members
-                    const otherMembers = members.filter(member => !member.isHead);
-                    otherMembers.forEach(member => {
-                        const age = member.dob ? AppState.calculateAge(member.dob) : '';
-                        const ageGroup = member.dob ? AppState.getAgeGroup(age) : '';
-                        const genderIcon = member.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
-                        
-                        // Build contact info
-                        let contactInfo = '';
-                        if (member.aadhar || member.phone) {
-                            contactInfo = '<div class="member-row-contact">';
-                            if (member.aadhar) {
-                                contactInfo += `<span><i class="bi bi-person-badge"></i> ${member.aadhar}</span>`;
-                            }
-                            if (member.phone) {
-                                contactInfo += `<span><i class="bi bi-telephone"></i> ${member.phone}</span>`;
-                            }
-                            contactInfo += '</div>';
-                        }
-                        
-                        const memberElement = document.createElement('div');
-                        memberElement.className = 'member-row';
-                        memberElement.innerHTML = `
-                            <div class="member-info">
-                                <div class="member-row-header">
-                                    <div>
-                                        <i class="bi ${genderIcon} me-1"></i>
-                                        ${member.name}
-                                    </div>
-                                    <div class="member-row-actions">
-                                        <button class="btn btn-icon btn-warning" onclick="UIController.editMember('${member.id}')" title="Edit Member">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-icon btn-danger" onclick="UIController.removeItem('${member.id}', 'member')" title="Remove Member">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="member-row-details">
-                                    ${member.dob ? `${age} years (${ageGroup})` : 'No DOB'}
-                                </div>
-                                ${contactInfo}
-                            </div>
-                        `;
-                        householdBody.appendChild(memberElement);
-                    });
-                    
-                    // Add address if available
-                    if (household.address) {
-                        const addressElement = document.createElement('div');
-                        addressElement.className = 'mt-3 text-sm text-gray-500';
-                        addressElement.innerHTML = `
-                            <i class="bi bi-geo-alt me-1"></i>
-                            ${household.address}
-                        `;
-                        householdBody.appendChild(addressElement);
-                    }
-                    
-                    // Add click event to header for collapsing/expanding
-                    householdHeader.addEventListener('click', (e) => {
-                        // Don't toggle if clicking on action menu or expand indicator
-                        if (!e.target.closest('.household-actions')) {
-                            this.toggleHousehold(household.id);
-                        }
-                    });
-                    
-                    // Assemble household card
-                    householdCard.appendChild(householdHeader);
-                    householdCard.appendChild(householdBody);
-                    
-                    // Add to households list
-                    householdsList.appendChild(householdCard);
-                });
-            },
-            
-            // Toggle household expansion
-            toggleHousehold(householdId) {
-                const householdBody = document.getElementById(`household-body-${householdId}`);
-                const expandIcon = document.getElementById(`expand-${householdId}`);
-                const householdCard = document.querySelector(`[data-household-id="${householdId}"]`);
-                
-                if (householdBody.classList.contains('expanded')) {
-                    // Collapse
-                    householdBody.classList.remove('expanded');
-                    expandIcon.classList.remove('rotated');
-                    householdCard.classList.remove('expanding');
-                } else {
-                    // Expand
-                    householdBody.classList.add('expanded');
-                    expandIcon.classList.add('rotated');
-                    householdCard.classList.add('expanding');
-                }
-            },
-            
-            // Filter households based on search
-            filterHouseholds() {
-                const searchTerm = document.getElementById('search-households').value.toLowerCase();
-                const householdCards = document.querySelectorAll('.household-card');
-                
-                householdCards.forEach(card => {
-                    const houseNumber = card.getAttribute('data-house-number');
-                    const hofName = card.getAttribute('data-hof-name');
-                    
-                    if (houseNumber.includes(searchTerm) || hofName.includes(searchTerm)) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            },
-            
-            // Sort households
-            sortHouseholds(sortBy) {
-                const householdsList = document.getElementById('households-list');
-                const householdCards = Array.from(householdsList.querySelectorAll('.household-card'));
-                
-                // Sort the cards
-                householdCards.sort((a, b) => {
-                    switch (sortBy) {
-                        case 'houseNumber':
-                            const aHouseNumber = a.getAttribute('data-house-number');
-                            const bHouseNumber = b.getAttribute('data-house-number');
-                            
-                            // Try to parse as numbers first
-                            const aNum = parseInt(aHouseNumber);
-                            const bNum = parseInt(bHouseNumber);
-                            
-                            if (!isNaN(aNum) && !isNaN(bNum)) {
-                                return aNum - bNum;
-                            }
-                            
-                            return aHouseNumber.localeCompare(bHouseNumber);
-                            
-                        case 'name':
-                            const aHofName = a.getAttribute('data-hof-name');
-                            const bHofName = b.getAttribute('data-hof-name');
-                            return aHofName.localeCompare(bHofName);
-                            
-                        case 'members':
-                            const aMemberCount = parseInt(a.getAttribute('data-member-count'));
-                            const bMemberCount = parseInt(b.getAttribute('data-member-count'));
-                            return bMemberCount - aMemberCount; // Descending order
-                            
-                        case 'date':
-                            const aDate = new Date(a.getAttribute('data-date'));
-                            const bDate = new Date(b.getAttribute('data-date'));
-                            return bDate - aDate; // Descending order (newest first)
-                            
-                        default:
-                            return 0;
-                    }
-                });
-                
-                // Re-append the sorted cards
-                householdCards.forEach(card => {
-                    householdsList.appendChild(card);
-                });
             },
             
             // Generate PDF Report
