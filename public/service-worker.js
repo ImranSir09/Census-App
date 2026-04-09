@@ -1,9 +1,13 @@
 const CACHE = "census-app-v2";
 
+const CACHE = "census-app-v3";
+
 const urlsToCache = [
 "./",
 "./index.html",
-"./manifest.json"
+"./manifest.json",
+"./public/icon-192.png",
+"./public/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
