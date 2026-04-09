@@ -1,8 +1,8 @@
 {
   "name": "Census App",
   "short_name": "Census",
-  "start_url": ".",
-  "scope": ".",
+  "start_url": "/Census-App/",
+  "scope": "/Census-App/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0d6efd",
