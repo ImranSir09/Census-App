@@ -5,7 +5,7 @@ const CACHE = "census-app-v3";
 const urlsToCache = [
 "./",
 "./index.html",
-"./manifest.json",
+"./public/manifest.json",
 "./public/icon-192.png",
 "./public/icon-512.png"
 ];
