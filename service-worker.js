@@ -1,11 +1,11 @@
-const CACHE = "census-app-v5";
+const CACHE = "census-app-final";
 
 const urlsToCache = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png"
+  "/Census-App/",
+  "/Census-App/index.html",
+  "/Census-App/manifest.json",
+  "/Census-App/icon-192.png",
+  "/Census-App/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
