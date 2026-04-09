@@ -1,8 +1,8 @@
-const CACHE = "census-app-v5";
+const CACHE = "census-app-v1";
 
 const urlsToCache = [
-  "./../",
-  "./../index.html",
+  "./",
+  "./index.html",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png"
