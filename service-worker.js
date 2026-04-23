@@ -1,4 +1,4 @@
-const CACHE = "census-app-final";
+const CACHE = "census-app-v1";
 
 const urlsToCache = [
   "/Census-App/",
