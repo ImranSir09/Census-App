@@ -1,0 +1,14 @@
+{
+  "name": "census-app",
+  "version": "1.0.0",
+  "description": "Census app for BLOs to carry out population census",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "echo 'No build required for static site'"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

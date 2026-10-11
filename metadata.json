@@ -1,0 +1,6 @@
+{
+  "name": "BLO Register",
+  "description": "Census app for BLOs (Booth Level Officers) to register households, members, track 17-year-olds, and generate census statistics and reports",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

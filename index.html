@@ -353,11 +353,49 @@
             position: relative;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.3);
+            min-width: 0;
         }
         
         .stat-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.05), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
+        }
+        
+        .stat-card-title {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .stat-card-value {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        @media (min-width: 480px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
         }
         
         .stat-card.households {
@@ -1486,50 +1524,50 @@
         <!-- Dashboard View -->
         <div id="dashboard-view" class="view active">
             <!-- Stats Cards -->
-            <div class="grid grid-cols-2 mb-6">
+            <div class="stats-grid mb-6">
                 <div class="stat-card households">
-                    <div class="d-flex items-center justify-between">
-                        <div>
-                            <p class="text-white text-sm mb-1 font-light">Households</p>
-                            <h3 id="total-households" class="text-3xl font-bold">0</h3>
+                    <div class="d-flex items-center justify-between gap-3">
+                        <div class="min-w-0 flex-1">
+                            <p class="stat-card-title">Households</p>
+                            <h3 id="total-households" class="stat-card-value">0</h3>
                         </div>
-                        <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 d-flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 d-flex items-center justify-center flex-shrink-0">
                             <i class="bi bi-house-door-fill text-white text-lg"></i>
                         </div>
                     </div>
                 </div>
                 
                 <div class="stat-card population">
-                    <div class="d-flex items-center justify-between">
-                        <div>
-                            <p class="text-white text-sm mb-1 font-light">Population</p>
-                            <h3 id="total-population" class="text-3xl font-bold">0</h3>
+                    <div class="d-flex items-center justify-between gap-3">
+                        <div class="min-w-0 flex-1">
+                            <p class="stat-card-title">Population</p>
+                            <h3 id="total-population" class="stat-card-value">0</h3>
                         </div>
-                        <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 d-flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 d-flex items-center justify-center flex-shrink-0">
                             <i class="bi bi-people-fill text-white text-lg"></i>
                         </div>
                     </div>
                 </div>
                 
                 <div class="stat-card male">
-                    <div class="d-flex items-center justify-between">
-                        <div>
-                            <p class="text-white text-sm mb-1 font-light">Male</p>
-                            <h3 id="total-male" class="text-3xl font-bold">0</h3>
+                    <div class="d-flex items-center justify-between gap-3">
+                        <div class="min-w-0 flex-1">
+                            <p class="stat-card-title">Male</p>
+                            <h3 id="total-male" class="stat-card-value">0</h3>
                         </div>
-                        <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 d-flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 d-flex items-center justify-center flex-shrink-0">
                             <i class="bi bi-gender-male text-white text-lg"></i>
                         </div>
                     </div>
                 </div>
                 
                 <div class="stat-card female">
-                    <div class="d-flex items-center justify-between">
-                        <div>
-                            <p class="text-white text-sm mb-1 font-light">Female</p>
-                            <h3 id="total-female" class="text-3xl font-bold">0</h3>
+                    <div class="d-flex items-center justify-between gap-3">
+                        <div class="min-w-0 flex-1">
+                            <p class="stat-card-title">Female</p>
+                            <h3 id="total-female" class="stat-card-value">0</h3>
                         </div>
-                        <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 d-flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 d-flex items-center justify-center flex-shrink-0">
                             <i class="bi bi-gender-female text-white text-lg"></i>
                         </div>
                     </div>
