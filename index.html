@@ -1695,10 +1695,13 @@
                                 return `<span class="badge badge-success me-1"><i class="bi bi-person-check-fill me-1"></i>${vCount} Voters</span>`;
                             })()}
                             <span class="badge badge-secondary me-2">${members.length} members</span>
-                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="UIController.editHousehold('${household.id}')" title="Edit Household">
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="event.stopPropagation(); UIController.handleAddMemberToHousehold('${household.id}')" title="Add Member to House #${household.houseNumber}">
+                                <i class="bi bi-person-plus"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="event.stopPropagation(); UIController.editHousehold('${household.id}')" title="Edit Household">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="UIController.removeItem('${household.id}', 'household')" title="Remove Household">
+                            <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); UIController.removeItem('${household.id}', 'household')" title="Remove Household">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -1715,11 +1718,11 @@
                         const hofAgeGroup = hof.dob ? AppState.getAgeGroup(hofAge) : '';
                         const hofGenderIcon = hof.gender === 'male' ? 'bi-gender-male' : 'bi-gender-female';
                         const hofVoterBadge = hof.isVoter 
-                            ? `<span class="badge badge-success ms-2 cursor-pointer" onclick="UIController.handleToggleVoter('${hof.id}')" title="Click to toggle voter status"><i class="bi bi-check-circle-fill"></i> Voter</span>` 
-                            : `<span class="badge badge-secondary ms-2 cursor-pointer" onclick="UIController.handleToggleVoter('${hof.id}')" title="Click to toggle voter status"><i class="bi bi-x-circle"></i> Non-Voter</span>`;
+                            ? `<span class="badge badge-success ms-2 cursor-pointer" onclick="event.stopPropagation(); UIController.handleToggleVoter('${hof.id}')" title="Click to toggle voter status"><i class="bi bi-check-circle-fill"></i> Voter</span>` 
+                            : `<span class="badge badge-secondary ms-2 cursor-pointer" onclick="event.stopPropagation(); UIController.handleToggleVoter('${hof.id}')" title="Click to toggle voter status"><i class="bi bi-x-circle"></i> Non-Voter</span>`;
                         
                         const hofElement = document.createElement('div');
-                        hofElement.className = 'd-flex justify-content-between align-items-center mb-2';
+                        hofElement.className = 'd-flex justify-content-between align-items-center flex-wrap gap-2 mb-2';
                         
                         // Build contact info (only for HOF)
                         let contactInfo = '';
@@ -1747,9 +1750,14 @@
                                 </div>
                                 ${contactInfo}
                             </div>
-                            <button class="btn btn-primary btn-sm" onclick="UIController.viewHousehold('${household.id}')">
-                                View Details <i class="bi bi-arrow-right ms-1"></i>
-                            </button>
+                            <div class="d-flex align-items-center gap-2 mt-2 mt-sm-0">
+                                <button class="btn btn-outline-primary btn-sm d-inline-flex align-items-center" onclick="event.stopPropagation(); UIController.handleAddMemberToHousehold('${household.id}')" title="Add Member to House #${household.houseNumber}">
+                                    <i class="bi bi-person-plus-fill me-1"></i>Add Member
+                                </button>
+                                <button class="btn btn-primary btn-sm d-inline-flex align-items-center" onclick="UIController.viewHousehold('${household.id}')">
+                                    View Details <i class="bi bi-arrow-right ms-1"></i>
+                                </button>
+                            </div>
                         `;
                         householdBody.appendChild(hofElement);
                     }
@@ -2086,12 +2094,20 @@
                 detailView.innerHTML = `
                     <div class="household-detail-header">
                         <div>
-                            <h2 class="text-xl font-bold mb-1 text-white">House #${household.houseNumber}</h2>
-                            <p class="text-slate-400 text-xs font-normal m-0">${household.headOfFamily}</p>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <button class="btn btn-sm btn-outline-light py-0 px-2" onclick="UIController.showView('households-view')" title="Back to Households">
+                                    <i class="bi bi-arrow-left"></i> Back
+                                </button>
+                                <h2 class="text-xl font-bold m-0 text-white">House #${household.houseNumber}</h2>
+                            </div>
+                            <p class="text-slate-400 text-xs font-normal m-0">Head of Family: ${household.headOfFamily}</p>
                         </div>
-                        <div class="d-flex align-items-center">
-                            <span class="badge badge-secondary me-2">${members.length} members</span>
-                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="UIController.editHousehold('${household.id}')" title="Edit Household">
+                        <div class="d-flex align-items-center flex-wrap gap-2">
+                            <span class="badge badge-secondary">${members.length} members</span>
+                            <button class="btn btn-sm btn-primary d-inline-flex align-items-center" onclick="UIController.handleAddMemberToHousehold('${household.id}')" title="Add Member to House #${household.houseNumber}">
+                                <i class="bi bi-person-plus-fill me-1"></i>Add Member
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="UIController.editHousehold('${household.id}')" title="Edit Household">
                                 <i class="bi bi-pencil"></i>
                             </button>
                             <button class="btn btn-sm btn-outline-danger" onclick="UIController.removeItem('${household.id}', 'household')" title="Remove Household">
@@ -2110,10 +2126,15 @@
                         ` : ''}
                         
                         <div class="mb-4">
-                            <h5 class="section-title">
-                                <i class="bi bi-people-fill"></i>
-                                Household Members
-                            </h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="section-title mb-0">
+                                    <i class="bi bi-people-fill"></i>
+                                    Household Members (${members.length})
+                                </h5>
+                                <button class="btn btn-sm btn-outline-primary d-inline-flex align-items-center" onclick="UIController.handleAddMemberToHousehold('${household.id}')" title="Add Member to House #${household.houseNumber}">
+                                    <i class="bi bi-person-plus-fill me-1"></i>+ Add Member
+                                </button>
+                            </div>
                             <div class="member-grid" id="member-grid">
                                 <!-- Members will be added here dynamically -->
                             </div>
@@ -2205,38 +2226,76 @@
                     
                     memberGrid.appendChild(memberCard);
                 });
+
+                // Helper prompt if only HOF exists
+                if (members.length <= 1) {
+                    const emptyNotice = document.createElement('div');
+                    emptyNotice.className = 'p-4 text-center bg-slate-50 border border-dashed border-slate-200 rounded-xl my-2';
+                    emptyNotice.style.gridColumn = '1 / -1';
+                    emptyNotice.innerHTML = `
+                        <i class="bi bi-person-plus text-slate-400 fs-3 d-block mb-2"></i>
+                        <div class="text-sm font-semibold text-slate-700 mb-1">Add Family Members</div>
+                        <p class="text-xs text-slate-500 mb-3 max-w-sm mx-auto">Only the Head of Family is currently listed. Add spouse, children, elderly parents, or other dependents living in this household.</p>
+                        <button class="btn btn-sm btn-primary" onclick="UIController.handleAddMemberToHousehold('${householdId}')">
+                            <i class="bi bi-person-plus-fill me-1"></i>+ Add Member Now
+                        </button>
+                    `;
+                    memberGrid.appendChild(emptyNotice);
+                }
             },
             
-            // Handle add member to household (from detail view)
-            handleAddMemberToHousehold() {
-                const householdId = AppState.currentHouseholdId;
-                if (!householdId) return;
+            // Handle add member to household (from detail view or households list)
+            handleAddMemberToHousehold(targetHouseholdId = null) {
+                const householdId = targetHouseholdId || AppState.currentHouseholdId;
+                if (!householdId) {
+                    this.showToast('Please select a household first.', 'warning');
+                    return;
+                }
                 
                 // Get household data
                 const household = AppState.getHousehold(householdId);
-                if (!household) return;
+                if (!household) {
+                    this.showToast('Household not found.', 'error');
+                    return;
+                }
                 
+                // Remove existing quick-add modal if any
+                const existingModal = document.getElementById('quick-add-member-modal');
+                if (existingModal) existingModal.remove();
+
                 // Show add member modal with pre-filled household info
                 const modal = document.createElement('div');
+                modal.id = 'quick-add-member-modal';
                 modal.className = 'edit-modal active';
                 modal.innerHTML = `
                     <div class="edit-modal-content">
-                        <h3 class="edit-modal-title">Add Member to Household #${household.houseNumber}</h3>
+                        <div class="d-flex justify-content-between align-items-start mb-3 border-b border-gray-100 pb-2">
+                            <div>
+                                <h3 class="edit-modal-title mb-1 text-slate-900 font-bold">Add Family Member</h3>
+                                <div class="text-xs text-gray-500 font-normal">
+                                    House #${household.houseNumber} &bull; Head of Family: <span class="font-medium text-slate-700">${household.headOfFamily}</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2 rounded-lg" id="close-quick-add-x" title="Close">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
                         <div class="edit-modal-body">
                             <form id="quick-add-member-form">
                                 <div class="mb-3">
-                                    <label for="quick-member-name" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="quick-member-name" placeholder="Enter full name" required>
+                                    <label for="quick-member-name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="quick-member-name" placeholder="Enter full name" required autocomplete="off">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="quick-member-dob" class="form-label">Date of Birth</label>
+                                    <label for="quick-member-dob" class="form-label">Date of Birth <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control" id="quick-member-dob" required>
+                                    <div class="text-xs text-gray-500 mt-1 d-none" id="quick-age-display"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Gender</label>
+                                    <label class="form-label">Gender <span class="text-danger">*</span></label>
                                     <div class="mt-1">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="quick-member-gender" id="quick-member-gender-male" value="male" required>
+                                            <input class="form-check-input" type="radio" name="quick-member-gender" id="quick-member-gender-male" value="male" checked required>
                                             <label class="form-check-label" for="quick-member-gender-male">Male</label>
                                         </div>
                                         <div class="form-check form-check-inline">
@@ -2256,27 +2315,53 @@
                                             <input class="form-check-input" type="checkbox" id="quick-member-is-voter" style="width: 2.4em; height: 1.3em; cursor: pointer;">
                                         </div>
                                     </div>
-                                    <div class="text-xs text-gray-500 mt-1">Indicates if this member is registered on the electoral roll.</div>
+                                    <div class="text-xs text-gray-500 mt-1">Indicates if this member is registered on the electoral roll (auto-checked if 18+).</div>
                                 </div>
                             </form>
                         </div>
                         <div class="edit-modal-footer">
-                            <button class="btn btn-secondary" id="cancel-quick-add">Cancel</button>
-                            <button class="btn btn-primary" id="save-quick-add">Add Member</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-quick-add">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="save-quick-add">
+                                <i class="bi bi-person-plus me-1"></i>Add Member
+                            </button>
                         </div>
                     </div>
                 `;
                 
                 document.body.appendChild(modal);
-                
-                // Auto-toggle voter checkbox on DOB change in quick add
+
+                const closeModal = () => {
+                    if (modal.parentNode) modal.parentNode.removeChild(modal);
+                    document.removeEventListener('keydown', handleEsc);
+                };
+
+                const handleEsc = (e) => {
+                    if (e.key === 'Escape') closeModal();
+                };
+                document.addEventListener('keydown', handleEsc);
+
+                // Backdrop click closes modal
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+
+                // Auto-toggle voter checkbox and calculate age on DOB change in quick add
                 const quickDobInput = document.getElementById('quick-member-dob');
+                const quickAgeDisplay = document.getElementById('quick-age-display');
                 if (quickDobInput) {
                     quickDobInput.addEventListener('change', (e) => {
                         if (e.target.value) {
                             const age = AppState.calculateAge(e.target.value);
+                            const ageGroup = AppState.getAgeGroup(age);
                             const quickVoterBox = document.getElementById('quick-member-is-voter');
                             if (quickVoterBox) quickVoterBox.checked = (age >= 18);
+                            
+                            if (quickAgeDisplay) {
+                                quickAgeDisplay.classList.remove('d-none');
+                                quickAgeDisplay.innerHTML = `<span class="badge ${age >= 18 ? 'badge-success' : 'badge-secondary'} me-1">Age: ${age} years (${ageGroup})</span> ${age >= 18 ? 'Eligible for Voter Roll' : 'Minor / Youth'}`;
+                            }
+                        } else if (quickAgeDisplay) {
+                            quickAgeDisplay.classList.add('d-none');
                         }
                     });
                 }
@@ -2284,20 +2369,37 @@
                 // Setup event listeners for quick add
                 const quickAddForm = document.getElementById('quick-add-member-form');
                 const cancelBtn = document.getElementById('cancel-quick-add');
+                const closeXBtn = document.getElementById('close-quick-add-x');
                 const saveBtn = document.getElementById('save-quick-add');
                 
-                // Cancel button
-                cancelBtn.addEventListener('click', () => {
-                    document.body.removeChild(modal);
-                });
+                cancelBtn.addEventListener('click', closeModal);
+                if (closeXBtn) closeXBtn.addEventListener('click', closeModal);
                 
-                // Save button
-                saveBtn.addEventListener('click', () => {
-                    const name = document.getElementById('quick-member-name').value;
+                // Save handler
+                const handleSave = () => {
+                    if (!quickAddForm.checkValidity()) {
+                        quickAddForm.reportValidity();
+                        return;
+                    }
+                    
+                    const name = document.getElementById('quick-member-name').value.trim();
                     const dob = document.getElementById('quick-member-dob').value;
-                    const gender = document.querySelector('input[name="quick-member-gender"]:checked').value;
+                    const genderRadio = document.querySelector('input[name="quick-member-gender"]:checked');
+                    const gender = genderRadio ? genderRadio.value : 'male';
                     const isVoter = document.getElementById('quick-member-is-voter') ? document.getElementById('quick-member-is-voter').checked : false;
                     
+                    if (!name) {
+                        this.showToast('Please enter the member name.', 'error');
+                        document.getElementById('quick-member-name').focus();
+                        return;
+                    }
+
+                    if (!dob) {
+                        this.showToast('Please enter the date of birth.', 'error');
+                        document.getElementById('quick-member-dob').focus();
+                        return;
+                    }
+
                     // Add member
                     AppState.addMember({
                         householdId: householdId,
@@ -2307,25 +2409,37 @@
                         isVoter: isVoter
                     });
                     
-                    // Remove modal
-                    document.body.removeChild(modal);
+                    // Close modal
+                    closeModal();
                     
-                    // Refresh member grid
-                    this.populateMemberGrid(householdId);
+                    // Update dashboard statistics
+                    this.updateDashboard();
+
+                    // Refresh current view
+                    if (this.currentView === 'household-detail-view' && AppState.currentHouseholdId === householdId) {
+                        this.viewHousehold(householdId);
+                    } else if (this.currentView === 'households-view') {
+                        this.displayHouseholds();
+                    } else if (this.currentView === 'seventeen-view') {
+                        this.displaySeventeenYearOlds();
+                    }
                     
                     // Show success toast
-                    this.showToast('Member added successfully!', 'success');
-                });
+                    this.showToast(`Member "${name}" added to House #${household.houseNumber} successfully!`, 'success');
+                };
+
+                saveBtn.addEventListener('click', handleSave);
                 
                 // Form submission
                 quickAddForm.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    saveBtn.click();
+                    handleSave();
                 });
                 
                 // Focus on name input
                 setTimeout(() => {
-                    document.getElementById('quick-member-name').focus();
+                    const nameInput = document.getElementById('quick-member-name');
+                    if (nameInput) nameInput.focus();
                 }, 100);
             },
             
