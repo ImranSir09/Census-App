@@ -107,25 +107,40 @@
             <!-- Electoral / Voter Summary Card -->
             <div class="card mb-6">
                 <div class="p-4">
-                    <div class="d-flex items-center justify-between mb-3">
-                        <h5 class="section-title mb-0">
-                            <i class="bi bi-person-check-fill text-emerald-600"></i>
-                            Electoral Roll / Voter Status
-                        </h5>
+                    <div class="d-flex items-center justify-between mb-3 flex-wrap gap-2">
+                        <div>
+                            <h5 class="section-title mb-0">
+                                <i class="bi bi-person-check-fill text-emerald-600"></i>
+                                Electoral Roll & Voter Registration
+                            </h5>
+                            <p class="text-xs text-slate-500 m-0 mt-0.5">Enrolled eligible voters across registered households</p>
+                        </div>
                         <span class="badge badge-success" id="dash-voter-pct-badge">0% of Adults</span>
                     </div>
-                    <div class="grid grid-cols-3 gap-3 text-center">
-                        <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
-                            <div class="text-xs text-gray-600 font-medium mb-1">Total Voters</div>
-                            <div class="text-2xl font-bold text-emerald-700" id="dash-total-voters">0</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80">
+                            <div class="d-flex items-center justify-between mb-1">
+                                <span class="stat-card-title text-emerald-900/70 m-0">Total Voters</span>
+                                <i class="bi bi-people-fill text-emerald-600 text-sm"></i>
+                            </div>
+                            <div class="text-2xl font-bold text-emerald-700 tracking-tight tabular-nums" id="dash-total-voters">0</div>
+                            <div class="text-xs text-emerald-800/70 mt-0.5">Adult registered citizens</div>
                         </div>
-                        <div class="p-3 rounded-xl bg-sky-50 border border-sky-200">
-                            <div class="text-xs text-gray-600 font-medium mb-1">Male Voters</div>
-                            <div class="text-2xl font-bold text-sky-700" id="dash-male-voters">0</div>
+                        <div class="p-3.5 rounded-xl bg-sky-50/70 border border-sky-200/80">
+                            <div class="d-flex items-center justify-between mb-1">
+                                <span class="stat-card-title text-sky-900/70 m-0">Male Voters</span>
+                                <i class="bi bi-gender-male text-sky-600 text-sm"></i>
+                            </div>
+                            <div class="text-2xl font-bold text-sky-700 tracking-tight tabular-nums" id="dash-male-voters">0</div>
+                            <div class="text-xs text-sky-800/70 mt-0.5">Enrolled males</div>
                         </div>
-                        <div class="p-3 rounded-xl bg-rose-50 border border-rose-200">
-                            <div class="text-xs text-gray-600 font-medium mb-1">Female Voters</div>
-                            <div class="text-2xl font-bold text-rose-700" id="dash-female-voters">0</div>
+                        <div class="p-3.5 rounded-xl bg-rose-50/70 border border-rose-200/80">
+                            <div class="d-flex items-center justify-between mb-1">
+                                <span class="stat-card-title text-rose-900/70 m-0">Female Voters</span>
+                                <i class="bi bi-gender-female text-rose-600 text-sm"></i>
+                            </div>
+                            <div class="text-2xl font-bold text-rose-700 tracking-tight tabular-nums" id="dash-female-voters">0</div>
+                            <div class="text-xs text-rose-800/70 mt-0.5">Enrolled females</div>
                         </div>
                     </div>
                 </div>
@@ -346,10 +361,10 @@
                     
                     <!-- Cohort Year & Filter Selector Toolbar -->
                     <div class="seventeen-cohort-toolbar">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
                             <div>
-                                <label for="select-seventeen-year" class="form-label text-xs mb-1 font-semibold text-gray-700">
-                                    <i class="bi bi-calendar-event me-1 text-primary"></i> Reference / Cohort Year:
+                                <label for="select-seventeen-year" class="form-label">
+                                    <i class="bi bi-calendar-event me-1.5 text-primary"></i>Reference / Cohort Year
                                 </label>
                                 <select class="form-control" id="select-seventeen-year">
                                     <option value="current">Current (Age 17 Today)</option>
@@ -357,8 +372,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="filter-seventeen-gender" class="form-label text-xs mb-1 font-semibold text-gray-700">
-                                    <i class="bi bi-gender-ambiguous me-1 text-primary"></i> Gender:
+                                <label for="filter-seventeen-gender" class="form-label">
+                                    <i class="bi bi-gender-ambiguous me-1.5 text-primary"></i>Gender
                                 </label>
                                 <select class="form-control" id="filter-seventeen-gender">
                                     <option value="">All Genders</option>
@@ -367,8 +382,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="filter-seventeen-voter" class="form-label text-xs mb-1 font-semibold text-gray-700">
-                                    <i class="bi bi-person-check me-1 text-primary"></i> Voter Status:
+                                <label for="filter-seventeen-voter" class="form-label">
+                                    <i class="bi bi-person-check me-1.5 text-primary"></i>Voter Status
                                 </label>
                                 <select class="form-control" id="filter-seventeen-voter">
                                     <option value="">All Statuses</option>
@@ -1831,22 +1846,44 @@
 
                     statsContainer.innerHTML = `
                         <div class="cohort-stat-chip">
-                            <span class="chip-label">Total in Cohort</span>
-                            <span class="chip-value">${totalCohort}</span>
+                            <div class="chip-header">
+                                <span class="chip-label">Total in Cohort</span>
+                                <i class="bi bi-people chip-icon"></i>
+                            </div>
+                            <div class="chip-value">${totalCohort}</div>
+                            <div class="chip-subtext">${isPastCohort ? `Turned 17 in ${selectedYear}` : 'Eligible youth'}</div>
                         </div>
                         <div class="cohort-stat-chip">
-                            <span class="chip-label">Male / Female</span>
-                            <span class="chip-value text-base">${maleCohort} M · ${femaleCohort} F</span>
+                            <div class="chip-header">
+                                <span class="chip-label">Male / Female</span>
+                                <i class="bi bi-gender-ambiguous chip-icon"></i>
+                            </div>
+                            <div class="chip-value chip-value-split">
+                                <span class="text-sky-700">${maleCohort} <span class="chip-unit">M</span></span>
+                                <span class="chip-unit-sep">·</span>
+                                <span class="text-rose-700">${femaleCohort} <span class="chip-unit">F</span></span>
+                            </div>
+                            <div class="chip-subtext">Gender breakdown</div>
                         </div>
                         <div class="cohort-stat-chip">
-                            <span class="chip-label">Registered Voters</span>
-                            <span class="chip-value text-emerald-600">${voterCohort} <small class="text-xs text-gray-500 font-normal">(${voterPct}%)</small></span>
+                            <div class="chip-header">
+                                <span class="chip-label">Registered Voters</span>
+                                <i class="bi bi-person-check chip-icon text-emerald-600"></i>
+                            </div>
+                            <div class="chip-value text-emerald-700">
+                                ${voterCohort} <span class="chip-subpct">(${voterPct}%)</span>
+                            </div>
+                            <div class="chip-subtext">${totalCohort - voterCohort} not yet enrolled</div>
                         </div>
                         <div class="cohort-stat-chip">
-                            <span class="chip-label">Timeline Status</span>
-                            <span class="chip-value text-xs font-semibold text-indigo-700 mt-1">
-                                ${isPastCohort ? `Turned 17 in ${selectedYear}` : 'Turning 18 Next Year'}
-                            </span>
+                            <div class="chip-header">
+                                <span class="chip-label">Timeline Status</span>
+                                <i class="bi bi-hourglass-split chip-icon text-indigo-600"></i>
+                            </div>
+                            <div class="chip-timeline-status">
+                                ${isPastCohort ? `Age 17 in ${selectedYear}` : 'Next Voter Cohort'}
+                            </div>
+                            <div class="chip-subtext text-slate-500">${isPastCohort ? 'Historical record' : 'Turns 18 next cycle'}</div>
                         </div>
                     `;
                 }
@@ -1909,39 +1946,57 @@
                     
                     seventeenCard.innerHTML = `
                         <div class="seventeen-header">
-                            <div class="seventeen-title">
-                                <i class="bi ${genderIcon}"></i>
-                                ${member.name}
+                            <div class="seventeen-identity">
+                                <div class="seventeen-name-wrapper">
+                                    <span class="seventeen-avatar ${member.gender}">
+                                        <i class="bi ${genderIcon}"></i>
+                                    </span>
+                                    <div>
+                                        <h4 class="seventeen-title">${member.name}</h4>
+                                        <div class="seventeen-subtitle">
+                                            <span>${member.gender === 'male' ? 'Male' : 'Female'}</span>
+                                            <span class="bullet-divider">·</span>
+                                            <span>House #${member.household.houseNumber}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div>${cohortBadgeText}</div>
-                        </div>
-                        <div class="seventeen-info mb-2">
-                            <div class="seventeen-age">
-                                <i class="bi bi-calendar3"></i>
-                                DOB: ${dobFormatted}
-                            </div>
-                            <div class="seventeen-gender ${member.gender}">
-                                <i class="bi ${genderIcon}"></i>
-                                ${member.gender.charAt(0).toUpperCase() + member.gender.slice(1)}
-                            </div>
-                        </div>
-                        <div class="d-flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-gray-100">
-                            <div class="seventeen-household m-0">
-                                <i class="bi bi-house-door"></i>
-                                House #${member.household.houseNumber} (${member.household.headOfFamily})
-                            </div>
-                            <div>
+                            <div class="seventeen-status-badges">
+                                ${cohortBadgeText}
                                 ${voterBadge}
                             </div>
                         </div>
-                        <div class="seventeen-actions">
-                            ${voterToggleBtn}
-                            <button class="btn btn-sm btn-outline-primary" onclick="UIController.viewHousehold('${member.householdId}')" title="View Household">
-                                <i class="bi bi-house-door me-1"></i> Household
-                            </button>
-                            <button class="btn btn-sm btn-outline-warning" onclick="UIController.editMember('${member.id}')" title="Edit Member">
-                                <i class="bi bi-pencil me-1"></i> Edit
-                            </button>
+
+                        <div class="seventeen-details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-calendar3 me-1"></i>Date of Birth</span>
+                                <span class="detail-value">${dobFormatted}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-clock-history me-1"></i>Age Status</span>
+                                <span class="detail-value">${isPastCohort ? `${member.currentAge} yrs (in ${new Date().getFullYear()})` : '17 Years Old'}</span>
+                            </div>
+                            <div class="detail-item detail-item-full">
+                                <span class="detail-label"><i class="bi bi-house-door me-1"></i>Household & Family</span>
+                                <span class="detail-value text-truncate">
+                                    House #${member.household.houseNumber} <span class="text-slate-400 font-normal">· Head:</span> <strong>${member.household.headOfFamily}</strong>
+                                    ${member.household.address ? `<span class="text-slate-400 font-normal"> · ${member.household.address}</span>` : ''}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="seventeen-card-footer">
+                            <div class="voter-quick-action">
+                                ${voterToggleBtn}
+                            </div>
+                            <div class="seventeen-actions">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="UIController.viewHousehold('${member.householdId}')" title="View Household #${member.household.houseNumber}">
+                                    <i class="bi bi-house-door me-1.5"></i>Household
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="UIController.editMember('${member.id}')" title="Edit details">
+                                    <i class="bi bi-pencil me-1.5"></i>Edit
+                                </button>
+                            </div>
                         </div>
                     `;
                     
@@ -2196,27 +2251,36 @@
                     memberCard.className = 'member-card';
                     memberCard.innerHTML = `
                         <div class="member-card-header">
-                            <div class="d-flex align-items-center">
-                                <i class="bi ${genderIcon} me-2"></i>
-                                <div>
-                                    <div class="font-medium">${member.name}</div>
-                                    ${member.isHead ? '<span class="badge badge-primary ms-2">Head</span>' : ''}
+                            <div class="d-flex align-items-center gap-2.5 min-w-0">
+                                <span class="member-card-avatar ${member.gender}">
+                                    <i class="bi ${genderIcon}"></i>
+                                </span>
+                                <div class="min-w-0">
+                                    <div class="member-card-name">${member.name}</div>
+                                    <div class="member-card-meta">
+                                        <span>${member.gender === 'male' ? 'Male' : 'Female'}</span>
+                                        ${member.dob ? `<span class="bullet-divider">·</span><span>${age} yrs (${ageGroup})</span>` : ''}
+                                    </div>
                                 </div>
+                            </div>
+                            <div>
+                                ${member.isHead ? '<span class="badge badge-primary"><i class="bi bi-star-fill me-1 text-xs"></i>Head</span>' : ''}
                             </div>
                         </div>
                         <div class="member-card-body">
-                            <div class="text-gray-500 mb-1">
-                                ${member.dob ? `${age} years (${ageGroup})` : 'No DOB'}
+                            <div class="member-card-dob-row">
+                                <span class="detail-label"><i class="bi bi-calendar-event me-1"></i>Date of Birth</span>
+                                <span class="detail-value">${member.dob ? new Date(member.dob).toLocaleDateString() : '<span class="text-slate-400">Not recorded</span>'}</span>
                             </div>
-                            <div class="d-flex items-center justify-between my-2 pt-1 border-t border-gray-100">
+                            <div class="d-flex items-center justify-between my-2.5 pt-2 border-t border-slate-100">
                                 <div>${voterBadge}</div>
                                 <div>${voterToggleBtn}</div>
                             </div>
                             ${contactInfo}
                         </div>
                         <div class="member-card-footer">
-                            <button class="btn btn-sm btn-outline-warning" onclick="UIController.editMember('${member.id}')" title="Edit Member">
-                                <i class="bi bi-pencil"></i>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="UIController.editMember('${member.id}')" title="Edit Member">
+                                <i class="bi bi-pencil me-1"></i>Edit
                             </button>
                             <button class="btn btn-sm btn-outline-danger" onclick="UIController.removeItem('${member.id}', 'member')" title="Remove Member">
                                 <i class="bi bi-trash"></i>
